@@ -1,15 +1,12 @@
+import {Database_lookup } from './userdata.js'
+const connection = new Database_lookup();
 export const resolvers = {
     Query: {
     Test:()=>{
         return "success"
     },
-    User:(parent, {userId}, context, info) =>{
-        console.log(userId);
-        if(userId == 1){
-            return mock;
-        }
-        return null;
-        // return{message: "could not find user under this ID"}; 
+    User:(parent, {id}, context, info) =>{
+        return connection.getUser(id);
     }
     }
 }

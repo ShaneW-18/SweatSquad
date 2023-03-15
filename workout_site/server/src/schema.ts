@@ -1,6 +1,5 @@
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
-import pg from "pg";
+
+import {v4 as uuidv4} from 'uuid';
 
 
 export const typeDefs = `#graphql
@@ -10,7 +9,7 @@ export const typeDefs = `#graphql
   "User is a user that has a profile in the system with key cridentials for the person"
   type User {
     "UID of account"
-    id: Int!
+    id: String!
     username: String!
     password: String!
     age: Int!
@@ -39,7 +38,7 @@ export const typeDefs = `#graphql
   }
   type Query{
     "Get user by UID"
-    User(id: Int!): User
+    User(id: String!): User
     Test: String!
   }
  
