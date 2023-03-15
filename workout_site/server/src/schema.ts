@@ -1,6 +1,4 @@
-
-import {v4 as uuidv4} from 'uuid';
-
+import { v4 as uuidv4 } from "uuid";
 
 export const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
@@ -35,6 +33,8 @@ export const typeDefs = `#graphql
   type Mutation {
     "The login mutation takes a username and password as arguments,and returns an AuthPayload object containing the user token and user object."
     login(username: String!, password: String!): AuthPayload!
+    "Used to add user on register"
+    addUser(username: String!, password: String!: age: Int!, email: String!): User
   }
   type Query{
     "Get user by UID"
@@ -43,3 +43,4 @@ export const typeDefs = `#graphql
   }
  
 `;
+
