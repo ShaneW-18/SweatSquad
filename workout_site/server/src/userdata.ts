@@ -1,6 +1,7 @@
 import pg from "pg";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
+import {User} from "./interfaces"
 dotenv.config();
 
 export class Database_lookup {
@@ -33,36 +34,33 @@ export class Database_lookup {
         "SELECT * FROM users WHERE uid=$1",
         [id]
       );
-      let user = {
-        id: result.rows[0].uid,
-        username: result.rows[0].username,
-        password: result.rows[0].password,
-        age: result.rows[0].age,
-        email: result.rows[0].email,
-        description: result.rows[0].description,
-        following: result.rows[0].following,
-      };
-      return user;
+      return create_user_from_request(result)
     }
     return;
   }
   async addUser(user_temp) {
+    let id = user_temp.uuid
+    //init a responce to send back
     let responce = {
       code: 0,
       success: false,
       message: "Unknown error",
       user: null,
     };
+
+    //checks for email duplicate
     const email_dup = await this.dbConnection.query(
       "SELECT * FROM users WHERE email=$1",
       [user_temp.email]
     );
-    console.log(email_dup.rows.length);
     if (email_dup.rows.length > 0) {
       responce.code = 409;
       responce.message = "Email already in use";
       return responce;
-    } else {
+    }
+
+    // if no email duplicate then insert user
+    else {
       try {
         const result = await this.dbConnection.query(
           "INSERT INTO users VALUES ($1, $2, $3, $4, $5, $6, $7)",
@@ -76,20 +74,39 @@ export class Database_lookup {
             null,
           ]
         );
-      } catch {
+      }
+
+      //if respnce failed send internal server error
+       catch {
         responce.code = 500;
         responce.message = "Internal server error";
         return responce;
       }
+
+      //if all criteria is met return 200 responce
       responce.code = 200;
       responce.success = true;
       responce.message = "User added";
-      responce.user = await this.dbConnection.query(
-        "SELECT * FROM users WHERE uid=$1 ",
-        [user_temp.uuid]
-      );
+      responce.user = create_user_from_request(await this.dbConnection.query(
+        "SELECT * FROM users WHERE uid=$1",
+        [id]
+      ));
       return responce;
     }
     return responce;
   }
+}
+
+//creates a user from format given by database
+function create_user_from_request(user){
+  const re: User = { 
+    id: user.rows[0].uid,
+    username: user.rows[0].username,
+    password: user.rows[0].password,
+    age: user.rows[0].age,
+    email: user.rows[0].email,
+    description: user.rows[0].description,
+    following: user.rows[0].following,
+  }
+  return re;
 }
