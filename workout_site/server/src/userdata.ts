@@ -44,7 +44,52 @@ export class Database_lookup {
       };
       return user;
     }
-    return null;
+    return;
   }
-  async addUser() {}
+  async addUser(user_temp) {
+    let responce = {
+      code: 0,
+      success: false,
+      message: "Unknown error",
+      user: null,
+    };
+    const email_dup = await this.dbConnection.query(
+      "SELECT * FROM users WHERE email=$1",
+      [user_temp.email]
+    );
+    console.log(email_dup.rows.length);
+    if (email_dup.rows.length > 0) {
+      responce.code = 409;
+      responce.message = "Email already in use";
+      return responce;
+    } else {
+      try {
+        const result = await this.dbConnection.query(
+          "INSERT INTO users VALUES ($1, $2, $3, $4, $5, $6, $7)",
+          [
+            user_temp.username,
+            user_temp.password,
+            user_temp.uuid,
+            user_temp.age,
+            user_temp.email,
+            user_temp.description,
+            null,
+          ]
+        );
+      } catch {
+        responce.code = 500;
+        responce.message = "Internal server error";
+        return responce;
+      }
+      responce.code = 200;
+      responce.success = true;
+      responce.message = "User added";
+      responce.user = await this.dbConnection.query(
+        "SELECT * FROM users WHERE uid=$1 ",
+        [user_temp.uuid]
+      );
+      return responce;
+    }
+    return responce;
+  }
 }

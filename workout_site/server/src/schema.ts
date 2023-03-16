@@ -17,7 +17,12 @@ export const typeDefs = `#graphql
     "other users that are followed by current user"
     following: [User]
   }
-
+  type registerResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    user: User
+  }
 
   "Define a type for the data returned after a successful login"
   type AuthPayload{
@@ -34,7 +39,7 @@ export const typeDefs = `#graphql
     "The login mutation takes a username and password as arguments,and returns an AuthPayload object containing the user token and user object."
     login(username: String!, password: String!): AuthPayload!
     "Used to add user on register"
-    addUser(username: String!, password: String!: age: Int!, email: String!): User
+    register_user(username: String!, password: String!, age: Int!, email: String!, description: String): registerResponce!
   }
   type Query{
     "Get user by UID"
@@ -43,4 +48,3 @@ export const typeDefs = `#graphql
   }
  
 `;
-
