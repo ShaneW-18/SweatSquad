@@ -13,6 +13,7 @@ export class Database_lookup {
     this.initializeDBConnection();
   }
 
+  //method to initialize the database connection
   async initializeDBConnection() {
     try {
       const pool = new pg.Pool({
@@ -30,6 +31,7 @@ export class Database_lookup {
     }
   }
 
+  //method to create a user from a request
   async getUser(id: uuidv4) {
     if (id != null) {
       const result = await this.dbConnection.query(
@@ -99,18 +101,25 @@ export class Database_lookup {
     }
     return responce;
   }
-  async login(username, password){
+
+  //method to login user
+  async login(email, password){
     let responce = {
       code: 0,
       success: false,
       message: "Unknown error",
       user: null,
     };
+    console.log(email);
     const user = await this.dbConnection.query(
-      "SELECT * FROM users WHERE username=$1",
-      [username]
+      "SELECT * FROM users WHERE email=$1",
+      [email]
     );
+
+    //checks if user exists
     if (user.rows.length > 0) {
+
+      //checks if password is correct
       if(bcrypt.compareSync(password, user.rows[0].password)){
         responce.code = 200;
         responce.success = true;
@@ -118,12 +127,14 @@ export class Database_lookup {
         responce.user = create_user_from_request(user);
         return responce;
       }
+      //if password is incorrect
       else{
         responce.code = 401;
         responce.message = "Incorrect password";
         return responce;
       }
     }
+    //if user does not exist
     else{
       responce.code = 404;
       responce.message = "User not found";

@@ -34,9 +34,9 @@ export const typeDefs = `#graphql
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Mutation {
     "The login mutation takes a username and password as arguments,and returns an AuthPayload object containing the user token and user object."
-    login(username: String!, password: String!): userTypeResponce!
+    login(email: String!, password: String!): userTypeResponce!
     "Used to add user on register"
-    register_user(username: String!, password: String!, age: Int!, email: String!, description: String): userTypeResponce!
+    register_user(username: String!, password: String!, age: Int!, email: String!, description: String!): userTypeResponce!
   }
   type Query{
     "Get user by UID"
