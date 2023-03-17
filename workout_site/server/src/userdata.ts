@@ -110,7 +110,6 @@ export class Database_lookup {
       message: "Unknown error",
       user: null,
     };
-    console.log(email);
     const user = await this.dbConnection.query(
       "SELECT * FROM users WHERE email=$1",
       [email]
