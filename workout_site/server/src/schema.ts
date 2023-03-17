@@ -17,29 +17,26 @@ export const typeDefs = `#graphql
     "other users that are followed by current user"
     following: [User]
   }
-  type registerResponce{
+  "responce structure for login and register"
+  type userTypeResponce{
+    "code of responce"
     code: Int!
+    "if the responce was successful or not"
     success: Boolean!
+    "details about the responce"
     message: String!
+    "user object if success is true"
     user: User
   }
 
-  "Define a type for the data returned after a successful login"
-  type AuthPayload{
-    "User object associated with the session"
-    username: User!
-    "Unique token identifying the user session"
-    token: String!
-
-  }
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Mutation {
     "The login mutation takes a username and password as arguments,and returns an AuthPayload object containing the user token and user object."
-    login(username: String!, password: String!): AuthPayload!
+    login(email: String!, password: String!): userTypeResponce!
     "Used to add user on register"
-    register_user(username: String!, password: String!, age: Int!, email: String!, description: String): registerResponce!
+    register_user(username: String!, password: String!, age: Int!, email: String!, description: String!): userTypeResponce!
   }
   type Query{
     "Get user by UID"
