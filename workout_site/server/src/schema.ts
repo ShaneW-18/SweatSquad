@@ -28,20 +28,51 @@ export const typeDefs = `#graphql
     "user object if success is true"
     user: User
   }
+  type scheduleResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    schedule: schedule
+  }
+  type schedule{
+    "id of schedule"
+    scheduleid: Int!
+    "name of schedule"
+    name: String!
+    "description of schedule"
+    description: String
+    "image of schedule"
+    image: String
+    "workouts in schedule"
+    workouts: [workout]
+    user: User
+  }
+  type workout{
+    exerciseid: exercise!
+    sets: Int
+    reps: Int
+    workoutId: Int!
+  }
+  type exercise{
+    name: String!
+    description: String
+  }
 
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Mutation {
+    
     "The login mutation takes a username and password as arguments,and returns an AuthPayload object containing the user token and user object."
     login(email: String!, password: String!): userTypeResponce!
     "Used to add user on register"
     register_user(username: String!, password: String!, age: Int!, email: String!, description: String!): userTypeResponce!
   }
   type Query{
+
+    schedulesforuser(id: String!): [schedule]!
     "Get user by UID"
     User(id: String!): User
     Test: String!
   }
- 
 `;
