@@ -6,10 +6,10 @@ export const typeDefs = `#graphql
   # This "User" type defines the queryable fields for every User in our data source.
   "User is a user that has a profile in the system with key cridentials for the person"
   type User {
-    "UID of account"
-    id: String!
+
     username: String!
     password: String!
+    
     age: Int!
     email: String!
     "an about me created by user"
@@ -69,8 +69,8 @@ export const typeDefs = `#graphql
     register_user(username: String!, password: String!, age: Int!, email: String!, description: String!): userTypeResponce!
   }
   type Query{
-
-    schedulesforuser(id: String!): [schedule]!
+    "all of user schedules"
+    user_schedules(id: String!): [schedule!]!
     "Get user by UID"
     User(id: String!): User
     Test: String!

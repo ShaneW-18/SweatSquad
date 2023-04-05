@@ -1,6 +1,10 @@
 import { Database_lookup } from "./userdata.js";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+import { knexInstance } from "./interfaces.js";
+
+dotenv.config();
 
 const connection = new Database_lookup();
 export const resolvers = {
@@ -9,6 +13,10 @@ export const resolvers = {
     User: (parent, { id }, context, info) => {
       return connection.getUser(id);
     },
+    //get users schedules
+    user_schedules: (parent, { id }, context, info) => {
+      return connection.getUserSchedules(id);
+    }
   },
   Mutation: {
     //register user
@@ -34,4 +42,5 @@ export const resolvers = {
       return connection.login(email, password);
     }
   },
+  
 };

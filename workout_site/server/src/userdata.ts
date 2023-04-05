@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import {User} from "./interfaces";
 import bcrypt from "bcrypt";
+import { knexInstance } from "./interfaces.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ export class Database_lookup {
         password: process.env.PG_PASSWORD,
         port: parseInt(process.env.PG_PORT),
       });
+
       await pool.connect();
       this.dbConnection = pool;
       console.log("server init success");
@@ -34,11 +36,9 @@ export class Database_lookup {
   //method to create a user from a request
   async getUser(id: uuidv4) {
     if (id != null) {
-      const result = await this.dbConnection.query(
-        "SELECT * FROM users WHERE uid=$1",
-        [id]
-      );
-      return create_user_from_request(result)
+      const result = await knexInstance("users").where( "uid", id);
+      console.log(result);
+      return result;
     }
     return;
   }
@@ -141,8 +141,17 @@ export class Database_lookup {
     }
   
   }
+  async getUserSchedules(id: uuidv4) {
+    if (id != null) {
+      const result = await this.dbConnection.query(
+        "SELECT * FROM schedules WHERE uid=$1",
+        [id]
+      );
+      return result.rows;
+    }
+    return;
+  }
 }
-
 
 //creates a user from format given by database
 function create_user_from_request(user){
