@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import {User} from "./interfaces";
 import bcrypt from "bcrypt";
+import { knexInstance } from "./interfaces.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ export class Database_lookup {
         password: process.env.PG_PASSWORD,
         port: parseInt(process.env.PG_PORT),
       });
+
       await pool.connect();
       this.dbConnection = pool;
       console.log("server init success");
@@ -34,127 +36,96 @@ export class Database_lookup {
   //method to create a user from a request
   async getUser(id: uuidv4) {
     if (id != null) {
-      const result = await this.dbConnection.query(
-        "SELECT * FROM users WHERE uid=$1",
-        [id]
-      );
-      return create_user_from_request(result)
+
+      const result: User = await knexInstance("users").where( "userId", id).first();
+      return result;
     }
     return;
   }
 
   //method to add user to database
   async addUser(user_temp) {
-    let id = user_temp.uuid
-    //init a responce to send back
-    let responce = {
-      code: 0,
-      success: false,
-      message: "Unknown error",
-      user: null,
-    };
-
-    //checks for email duplicate
-    const email_dup = await this.dbConnection.query(
-      "SELECT * FROM users WHERE email=$1",
-      [user_temp.email]
-    );
-    if (email_dup.rows.length > 0) {
-      responce.code = 409;
-      responce.message = "Email already in use";
-      return responce;
-    }
-
-    // if no email duplicate then insert user
-    else {
-      try {
-        await this.dbConnection.query(
-          "INSERT INTO users VALUES ($1, $2, $3, $4, $5, $6, $7)",
-          [
-            user_temp.username,
-            user_temp.password,
-            user_temp.uuid,
-            user_temp.age,
-            user_temp.email,
-            user_temp.description,
-            null,
-          ]
-        );
-      }
-
-      //if respnce failed send internal server error
-       catch {
-        responce.code = 500;
-        responce.message = "Internal server error";
-        return responce;
-      }
-
-      //if all criteria is met return 200 responce
-      responce.code = 200;
-      responce.success = true;
-      responce.message = "User added";
-      responce.user = create_user_from_request(await this.dbConnection.query(
-        "SELECT * FROM users WHERE uid=$1",
-        [id]
-      ));
-      return responce;
-    }
-    return responce;
-  }
-
-  //method to login user
-  async login(email, password){
-    let responce = {
-      code: 0,
-      success: false,
-      message: "Unknown error",
-      user: null,
-    };
-    const user = await this.dbConnection.query(
-      "SELECT * FROM users WHERE email=$1",
-      [email]
-    );
-
-    //checks if user exists
-    if (user.rows.length > 0) {
-
-      //checks if password is correct
-      if(bcrypt.compareSync(password, user.rows[0].password)){
-        responce.code = 200;
-        responce.success = true;
-        responce.message = "Login successful";
-        responce.user = create_user_from_request(user);
-        return responce;
-      }
-      //if password is incorrect
-      else{
-        responce.code = 401;
-        responce.message = "Incorrect password";
-        return responce;
-      }
-    }
-    //if user does not exist
-    else{
-      responce.code = 404;
-      responce.message = "User not found";
-      return responce;
+    const id = user_temp.userId;
+    const existingUser = await knexInstance("users")
+      .where("email", user_temp.email )
+      .first();
+  
+    if (existingUser) {
+      return {
+        code: 409,
+        success: false,
+        message: "Email already in use",
+        user: null,
+      };
     }
   
+    try {
+      await knexInstance("users").insert(user_temp);
+    } catch {
+      return {
+        code: 500,
+        success: false,
+        message: "Internal server error",
+        user: null,
+      };
+    }
+  
+    const newUser = await knexInstance("users")
+      .where( "userId", id)
+      .first();
+  
+    return {
+      code: 200,
+      success: true,
+      message: "User added",
+      user: newUser
+    };
   }
-}
+  
 
-
-//creates a user from format given by database
-function create_user_from_request(user){
-  const re: User = { 
-    id: user.rows[0].uid,
-    username: user.rows[0].username,
-    password: user.rows[0].password,
-    age: user.rows[0].age,
-    email: user.rows[0].email,
-    description: user.rows[0].description,
-    following: user.rows[0].following,
+  async login(email, password) {
+    console.log("login");
+    const response = {
+      code: 0,
+      success: false,
+      message: "Unknown error",
+      user: null,
+    };
+  
+    const user = await knexInstance("users")
+      .where("email", email)
+      .first();
+  
+    if (user) {
+      const passwordMatch = await bcrypt.compare(password, user.password);
+  
+      if (passwordMatch) {
+        response.code = 200;
+        response.success = true;
+        response.message = "Login successful";
+        response.user = user
+      } else {
+        response.code = 401;
+        response.message = "Incorrect password";
+      }
+    } else {
+      response.code = 404;
+      response.message = "User not found";
+    }
+  
+    return response;
   }
-  return re;
-}
+  
+  async getUserSchedules(id) {
+    if (id != null) {
+      const result = await knexInstance("schedules")
+        .where("uid", id)
+        .select("*");
+      return result;
+    }
+  
+    return [];
+  }
+}  
+
 
