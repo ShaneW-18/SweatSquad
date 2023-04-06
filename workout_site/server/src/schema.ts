@@ -6,11 +6,10 @@ export const typeDefs = `#graphql
   # This "User" type defines the queryable fields for every User in our data source.
   "User is a user that has a profile in the system with key cridentials for the person"
   type User {
-
     username: String!
     password: String!
-    
-    age: Int!
+    "UID of account"
+    userId: String!
     email: String!
     "an about me created by user"
     description: String
@@ -62,11 +61,10 @@ export const typeDefs = `#graphql
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Mutation {
-    
     "The login mutation takes a username and password as arguments,and returns an AuthPayload object containing the user token and user object."
     login(email: String!, password: String!): userTypeResponce!
     "Used to add user on register"
-    register_user(username: String!, password: String!, age: Int!, email: String!, description: String!): userTypeResponce!
+    register_user(username: String!, password: String!, email: String!, description: String!): userTypeResponce!
   }
   type Query{
     "all of user schedules"

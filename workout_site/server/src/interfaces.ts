@@ -16,13 +16,14 @@ export const knexInstance = knex({
 
 
 export interface User {
-    username: string;
-    password: string;
-    id: uuidv4;
-    age: number;
-    email: string;
-    description: string;
-    following: string;
+  username: string
+  password: string
+  "UID of account"
+  userId: string
+  "an about me created by user"
+  description: string
+  "other users that are followed by current user"
+  following: [User]
   }
   export interface schedule{
     scheduleid: uuidv4;
