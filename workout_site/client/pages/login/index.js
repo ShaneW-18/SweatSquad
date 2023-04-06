@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Btn from '@/components/Btn';
 import { AiOutlineUser, AiFillLock } from 'react-icons/ai';
 import { MdOutlineLogin } from 'react-icons/md';
+import Link from 'next/link';
 
 export default function Login() {
     const [form, setForm] = useState({
@@ -30,19 +31,22 @@ export default function Login() {
     }
 
     return (
-        <div className='centered-box [&>*]:mb-[16px]'>
-            <h1 className='text-[3rem] font-semibold text-center'>Login</h1>
-            <div>
-                <p className='uppercase font-semibold text-sm flex items-center gap-1'><AiOutlineUser /> username</p>
-                <input type="text" onChange={updateForm} value={form.username} name="username" className='outline-none text-black px-2 py-1 rounded-md font-medium'/>
-            </div>
-            <div>
-                <p className='uppercase font-semibold text-sm flex items-center gap-1'><AiFillLock /> password</p>
-                <input type="text" onChange={updateForm} value={form.password} name="password" className='outline-none text-black px-2 py-1 rounded-md font-medium' />
-            </div>
+        <div className='gym-bg'>
+            <div className='centered-box [&>*]:mb-[16px] bg-dg-100 rounded-3xl p-20'>
+                <h1 className='text-[3rem] font-semibold text-center'>Gym<span className="text-primary">Social</span></h1>
+                <div>
+                    <p className='uppercase font-semibold text-sm flex items-center gap-1'><AiOutlineUser /> username</p>
+                    <input type="text" onChange={updateForm} value={form.username} name="username" className='outline-none text-black px-2 py-1 rounded-md font-medium w-full'/>
+                </div>
+                <div>
+                    <p className='uppercase font-semibold text-sm flex items-center gap-1'><AiFillLock /> password</p>
+                    <input type="text" onChange={updateForm} value={form.password} name="password" className='outline-none text-black px-2 py-1 rounded-md font-medium w-full' />
+                </div>
 
 
-            <Btn onClick={login} className='w-full'><MdOutlineLogin />Login</Btn>
+                <Btn onClick={login} className='w-full'><MdOutlineLogin />Login</Btn>
+                <Link href="/register" className='underline flex justify-center'>Click here to register</Link>
+            </div>
         </div>
     );
 }
