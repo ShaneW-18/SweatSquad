@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Btn from '@/components/Btn';
+import Btn from '../../components/Btn';
 import { AiOutlineUser, AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { MdOutlineLogin } from 'react-icons/md';
 import Link from 'next/link';
@@ -8,7 +8,8 @@ import {REGISTER} from '../../GraphQL/Mutations.js';
 import { useMutation } from "@apollo/client";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { errorToast, successToast } from '../toast/toasts.js';
+import { errorToast, successToast } from '../../components/toasts';
+import Router from 'next/router';
 
 export default function Register() {
     const [registerHandle, {data, loading, error}] = useMutation(REGISTER);
@@ -41,7 +42,9 @@ export default function Register() {
             .then(({ data }) => {
                 if (data) {
                      if(data.code === 200){
-                        successToast(data.register_user.message);
+                        localStorage.setItem('username', form.username);
+                        Router.push('/dashboard');
+                        //successToast(data.register_user.message);
                      }
                      else{
                         successToast(data.register_user.message);
@@ -52,7 +55,7 @@ export default function Register() {
 
     return (
         <>
-        <ToastContainer/>
+        <ToastContainer />
         <div className='gym-bg'>
             <div className='centered-box [&>*]:mb-[16px] bg-transparent md:bg-dg-100 rounded-3xl p-20 --bg fade-in'>
                 <h1 className='text-[3rem] font-semibold text-center'>Gym<span className="text-primary">Social</span></h1>
@@ -66,7 +69,7 @@ export default function Register() {
                 </div>
                 <div>
                     <p className='uppercase font-semibold text-sm flex items-center gap-1'><AiFillLock /> password</p>
-                    <input type="text" onChange={updateForm} value={form.password} name="password" className='outline-none text-black px-2 py-1 rounded-md font-medium w-full' />
+                    <input type="password" onChange={updateForm} value={form.password} name="password" className='outline-none text-black px-2 py-1 rounded-md font-medium w-full' />
                 </div>
 
                 <Btn onClick={register} className='w-full'><MdOutlineLogin />Register</Btn>
