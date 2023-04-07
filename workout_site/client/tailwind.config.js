@@ -10,9 +10,15 @@ module.exports = {
       'primary-h':'#2ea978',
       'dg-100': '#121212',
       'white':'#fff',
-      'black':'#000'
+      'black':'#000',
+      'transparent':'rgba(0,0,0,0)'
     },
     extend: {
+    },
+    screens: {
+      'sm': '600px',
+      'md': '1024px',
+      'lg': '1440px'
     },
   },
   plugins: [],

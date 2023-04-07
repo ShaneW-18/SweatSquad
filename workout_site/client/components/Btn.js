@@ -14,7 +14,7 @@ export default function Btn({children, onClick, className}) {
         <button
             onClick={handleClick}
             disabled={loading}
-            className={`bg-primary px-3 py-1 rounded-md font-semibold hover:bg-primary-h flex items-center justify-center gap-2 min-w-[120px] ${className}`}>
+            className={`bg-primary px-3 py-2 rounded-md font-semibold hover:bg-primary-h flex items-center justify-center gap-2 min-w-[120px] ${className}`}>
             {loading && (
                 <Oval
                 visible={loading}

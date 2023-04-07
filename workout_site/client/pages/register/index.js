@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import Btn from '@/components/Btn';
-import { AiOutlineUser, AiFillLock } from 'react-icons/ai';
+import { AiOutlineUser, AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { MdOutlineLogin } from 'react-icons/md';
 import Link from 'next/link';
 import { BiChevronRight } from 'react-icons/bi';
 
-export default function Login() {
+export default function Register() {
     const [form, setForm] = useState({
+        email: '',
         username: '',
-        password: ''
+        password: '',
     });
 
     const updateForm = (e) => {
@@ -22,7 +23,7 @@ export default function Login() {
         setForm(tempForm);
     }
 
-    async function login() {
+    async function register() {
         return new Promise((res, rej) => {
             const g = setTimeout(() => {
                 clearTimeout(g);
@@ -36,6 +37,10 @@ export default function Login() {
             <div className='centered-box [&>*]:mb-[16px] bg-transparent md:bg-dg-100 rounded-3xl p-20 --bg fade-in'>
                 <h1 className='text-[3rem] font-semibold text-center'>Gym<span className="text-primary">Social</span></h1>
                 <div>
+                    <p className='uppercase font-semibold text-sm flex items-center gap-1'><AiOutlineMail /> email</p>
+                    <input type="text" onChange={updateForm} value={form.username} name="username" className='outline-none text-black px-2 py-1 rounded-md font-medium w-full'/>
+                </div>
+                <div>
                     <p className='uppercase font-semibold text-sm flex items-center gap-1'><AiOutlineUser /> username</p>
                     <input type="text" onChange={updateForm} value={form.username} name="username" className='outline-none text-black px-2 py-1 rounded-md font-medium w-full'/>
                 </div>
@@ -44,8 +49,8 @@ export default function Login() {
                     <input type="text" onChange={updateForm} value={form.password} name="password" className='outline-none text-black px-2 py-1 rounded-md font-medium w-full' />
                 </div>
 
-                <Btn onClick={login} className='w-full'><MdOutlineLogin />Login</Btn>
-                <Link href="/register" className='flex justify-center font-medium items-center gap-1'>Click here to register<BiChevronRight /></Link>
+                <Btn onClick={register} className='w-full'><MdOutlineLogin />Register</Btn>
+                <Link href="/login" className='flex justify-center font-medium items-center gap-1'>Click here to login<BiChevronRight /></Link>
             </div>
         </div>
     );
