@@ -1,6 +1,5 @@
-import '@/styles/globals.css'
+import '../styles/globals.css'
 import { onError } from '@apollo/client/link/error'
-
 import {
   ApolloClient,
   InMemoryCache,
