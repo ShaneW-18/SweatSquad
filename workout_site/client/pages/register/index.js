@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Btn from '../../components/Btn';
+import Btn from '@/components/Btn';
 import { AiOutlineUser, AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { MdOutlineLogin } from 'react-icons/md';
 import Link from 'next/link';
