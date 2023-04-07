@@ -26,7 +26,15 @@ button {
 }
 
 .home-bg {
-  background-image: url('../public/img/vector.jpg');
+  background-image: url('/img/vector.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.rows-bg {
+  background-image: linear-gradient(90deg, rgba(0,0,0,0) 40%, #121212 100%), url('/img/rows.png');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .gym-bg {
