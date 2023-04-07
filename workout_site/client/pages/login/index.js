@@ -6,13 +6,14 @@ import {LOGIN} from '../../GraphQL/Mutations.js';
 import Link from 'next/link';
 import { BiChevronRight } from 'react-icons/bi';
 import { useMutation } from "@apollo/client";
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { errorToast, successToast } from '../toast/toasts.js';
-
+import { errorToast, successToast } from '../../components/toasts';
+import { useRouter } from 'next/router';
+import { ToastContainer } from 'react-toastify';
 
 
 export default function Login() {
+    const router = useRouter();
     const [loginHandle, {data, loading, error}] = useMutation(LOGIN);
     const [form, setForm] = useState({
         username: '',
@@ -31,20 +32,22 @@ export default function Login() {
     }
 
     async function login() {
-            await loginHandle({
-                variables: {
-                    email: form.username,
-                    password: form.password
-                }
-            })
-            .then(({ data }) => {
-                if(data.login.code === 200){
-                    successToast(data.login.message);
-                }
-                else{
-                    errorToast(data.login.message);
-                }
-            })
+        await loginHandle({
+            variables: {
+                email: form.username,
+                password: form.password
+            }
+        })
+        .then(({ data }) => {
+            if(data.login.code === 200){
+                localStorage.setItem('username', form.username);
+                router.push('/dashboard');
+                //successToast(data.login.message);
+            }
+            else{
+                errorToast(data.login.message);
+            }
+        })
     }
 
     return (
@@ -59,7 +62,7 @@ export default function Login() {
                     </div>
                     <div>
                         <p className='uppercase font-semibold text-sm flex items-center gap-1'><AiFillLock /> password</p>
-                        <input type="text" onChange={updateForm} value={form.password} name="password" className='outline-none text-black px-2 py-1 rounded-md font-medium w-full' />
+                        <input type="password" onChange={updateForm} value={form.password} name="password" className='outline-none text-black px-2 py-1 rounded-md font-medium w-full' />
                     </div>
 
                     <Btn onClick={login} className='w-full'><MdOutlineLogin />Login</Btn>
