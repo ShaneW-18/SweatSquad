@@ -12,7 +12,7 @@ export default function Home() {
         <p className="text-2xl font-medium">The go-to social network for fitness enthusiasts.</p>
         <div className="flex gap-2 items-center mt-8">
           <Link href="/register" className="block rounded-sm border-2 border-primary text-primary font-semibold px-2 py-1">Get Started</Link>
-          <Link href="/login" className="block rounded-sm bg-primary text-white font-semibold px-2 py-1">Login</Link>
+          <Link href="/login" className="block rounded-sm border-2 border-primary bg-primary text-white font-semibold px-2 py-1">Login</Link>
         </div>
       </div>
       <div className=" flex items-center justify-center flex-col gap-2 pr-8">

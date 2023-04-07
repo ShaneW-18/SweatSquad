@@ -40,7 +40,9 @@ export default function Login() {
         })
         .then(({ data }) => {
             if(data.login.code === 200){
-                localStorage.setItem('username', form.username);
+                if(typeof window !== 'undefined'){
+                    localStorage.setItem('username', form.username);
+                }
                 router.push('/dashboard');
                 //successToast(data.login.message);
             }
@@ -48,6 +50,12 @@ export default function Login() {
                 errorToast(data.login.message);
             }
         })
+    }
+
+    if(typeof window !== 'undefined'){
+        if (localStorage.getItem('username') !== null && localStorage.getItem('username') !== undefined){
+            router.push('/dashboard');
+        }
     }
 
     return (

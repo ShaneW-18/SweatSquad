@@ -9,9 +9,10 @@ import { useMutation } from "@apollo/client";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { errorToast, successToast } from '../../components/toasts';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 
 export default function Register() {
+    const router = useRouter();
     const [registerHandle, {data, loading, error}] = useMutation(REGISTER);
     const [form, setForm] = useState({
         email: '',
@@ -42,8 +43,10 @@ export default function Register() {
             .then(({ data }) => {
                 if (data) {
                      if(data.code === 200){
-                        localStorage.setItem('username', form.username);
-                        Router.push('/dashboard');
+                        if(typeof window !== 'undefined'){
+                            localStorage.setItem('username', form.username);
+                        }
+                        router.push('/dashboard');
                         //successToast(data.register_user.message);
                      }
                      else{
@@ -51,6 +54,12 @@ export default function Register() {
                      }     
                 }
             })
+    }
+
+    if(typeof window !== 'undefined'){
+        if (localStorage.getItem('username') !== null && localStorage.getItem('username') !== undefined){
+            router.push('/dashboard');
+        }
     }
 
     return (
