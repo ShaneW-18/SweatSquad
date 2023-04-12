@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
+import Navbar from '../../components/navbar';
 
 export default function Dashboard() {
 
@@ -10,10 +11,13 @@ export default function Dashboard() {
     }
 
     return (
+        <>
+        <Navbar />
         <div>
             <h1>Dashboard</h1>
             <p>Welcome, {username}</p>
             <Link href="/logout">Logout</Link>
         </div>
+        </>
     );
 }
