@@ -39,6 +39,7 @@ export default function Login() {
             }
         })
         .then(({ data }) => {
+            console.log(data);
             if(data.login.code === 200){
                 if(typeof window !== 'undefined'){
                     localStorage.setItem('username', form.username);
