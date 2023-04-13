@@ -2,9 +2,11 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs } from "./schema.js";
 import { resolvers } from "./resolvers.js";
+import { constants } from "buffer";
+import { GraphQLError } from 'graphql';
 
 // The ApolloServer constructor requires two parameters: your schema
-
+const allowedOrgins = ["http://localhost:3000", "http://localhost:4001", "https://gymsocial.swiles.tech"];
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -18,7 +20,19 @@ const server = new ApolloServer({
 //  3. prepares your app to handle incoming requests
 
 const { url } = await startStandaloneServer(server, {
+  context:  async ({req, res}) => {
+    if(!allowedOrgins.includes(req.headers.origin)) {
+      throw new GraphQLError("incorrect source", {
+        extensions: {
+          code: "UNAUTHENTICATED",
+          httpStatus: 401,
+        },
+      });
+    }
+  },
+
   listen: { port: 4001 },
 });
+
 
 console.log(`Server ready at: ${url}`);

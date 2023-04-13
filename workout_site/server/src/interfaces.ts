@@ -43,3 +43,9 @@ export interface User {
     description: string;
     id: uuidv4;
   }
+
+  export interface authUser {
+    username: string;
+    userId: string;
+    token: string;
+  }

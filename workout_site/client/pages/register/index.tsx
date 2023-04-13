@@ -4,7 +4,7 @@ import { AiOutlineUser, AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { MdOutlineLogin } from 'react-icons/md';
 import Link from 'next/link';
 import { BiChevronRight } from 'react-icons/bi';
-import {REGISTER} from '../../GraphQL/Mutations.js';
+import {REGISTER} from '../../GraphQL/Mutations.ts';
 import { useMutation } from "@apollo/client";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,13 +20,13 @@ export default function Register() {
         password: '',
     });
 
-    const updateForm = (e) => {
+    const updateForm = (e:any) => {
         const t = e.target;
         if ((t.name in form) === false){
             return;
         }
 
-        const tempForm = Object.assign({}, form);
+        const tempForm:any = Object.assign({}, form);
         tempForm[t.name] = t.value;
         setForm(tempForm);
     }
