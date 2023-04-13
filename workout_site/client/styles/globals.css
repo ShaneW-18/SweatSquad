@@ -49,13 +49,37 @@ button {
 }
 
 .fade-in {
-  animation: fade-in;
+  animation: slow-fade-in;
   animation-fill-mode: forwards;
   animation-duration: 400ms;
   animation-timing-function: ease-in;
 }
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
 
-@keyframes fade-in {
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes slow-fade-in {
   from {
     opacity:0;
     transform: translate(calc(-50% - 40px), -50%);
@@ -64,4 +88,42 @@ button {
     opacity:1;
     transform: translate(-50%, -50%);
   }
+}
+/* Firefox < 16 */
+@-moz-keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+.loading-main {
+  -webkit-animation: fade-in .4s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fade-in .4s; /* Firefox < 16 */
+  -ms-animation: fade-in .4s; /* Internet Explorer */
+  -o-animation: fade-in .4s; /* Opera < 12.1 */
+  animation: fade-in .4s;
+  background-color: rgba(0,0,0,.5);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
