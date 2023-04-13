@@ -9,7 +9,8 @@ import { GraphQLError } from "graphql";
 const allowedOrgins = [
   "http://localhost:3000",
   "http://localhost:4001",
-  "https://gymsocial.swiles.tech",
+  "https://gymsocial.swiles.tech/login",
+  "https://gymsocial.swiles.tech/register"
 ];
 const server = new ApolloServer({
   typeDefs,
