@@ -4,7 +4,7 @@ import { AiOutlineUser, AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { MdOutlineLogin } from 'react-icons/md';
 import Link from 'next/link';
 import { BiChevronRight } from 'react-icons/bi';
-import {REGISTER} from '../../GraphQL/Mutations.ts';
+import {REGISTER} from '../../GraphQL/Mutations.js';
 import { useMutation } from "@apollo/client";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

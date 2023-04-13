@@ -17,12 +17,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve"
+
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/_app.tsx", "GraphQL/Mutations.ts"  ],
+, "pages/_app.tsx", "GraphQL/Mutations.js", "GraphQL/Queries.js"  ],
   "exclude": [
     "node_modules"
   ]

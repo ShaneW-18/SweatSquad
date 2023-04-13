@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { LOGIN } from "../../../GraphQL/Mutations.ts";
+import { LOGIN } from "../../../GraphQL/Mutations.js";
 import { useApolloClient, gql } from "@apollo/client";
 import { User } from "next-auth";
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";

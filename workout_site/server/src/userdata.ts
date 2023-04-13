@@ -1,7 +1,7 @@
 import pg from "pg";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
-import {User} from "./interfaces";
+import { User } from "./interfaces";
 import bcrypt from "bcrypt";
 import { knexInstance } from "./interfaces.js";
 
@@ -36,8 +36,9 @@ export class Database_lookup {
   //method to create a user from a request
   async getUser(id: uuidv4) {
     if (id != null) {
-
-      const result: User = await knexInstance("users").where( "userId", id).first();
+      const result: User = await knexInstance("users")
+        .where("userId", id)
+        .first();
       return result;
     }
     return;
@@ -47,9 +48,9 @@ export class Database_lookup {
   async addUser(user_temp) {
     const id = user_temp.userId;
     const existingUser = await knexInstance("users")
-      .where("email", user_temp.email )
+      .where("email", user_temp.email)
       .first();
-  
+
     if (existingUser) {
       return {
         code: 409,
@@ -58,7 +59,7 @@ export class Database_lookup {
         user: null,
       };
     }
-  
+
     try {
       await knexInstance("users").insert(user_temp);
     } catch {
@@ -69,19 +70,16 @@ export class Database_lookup {
         user: null,
       };
     }
-  
-    const newUser = await knexInstance("users")
-      .where( "userId", id)
-      .first();
-  
+
+    const newUser = await knexInstance("users").where("userId", id).first();
+
     return {
       code: 200,
       success: true,
       message: "User added",
-      user: newUser
+      user: newUser,
     };
   }
-  
 
   async login(email, password) {
     console.log("login");
@@ -91,19 +89,17 @@ export class Database_lookup {
       message: "Unknown error",
       user: null,
     };
-  
-    const user = await knexInstance("users")
-      .where("email", email)
-      .first();
-  
+
+    const user = await knexInstance("users").where("email", email).first();
+
     if (user) {
       const passwordMatch = await bcrypt.compare(password, user.password);
-  
+
       if (passwordMatch) {
         response.code = 200;
         response.success = true;
         response.message = "Login successful";
-        response.user = user
+        response.user = user;
       } else {
         response.code = 401;
         response.message = "Incorrect password";
@@ -112,10 +108,10 @@ export class Database_lookup {
       response.code = 404;
       response.message = "User not found";
     }
-  
+
     return response;
   }
-  
+
   async getUserSchedules(id) {
     if (id != null) {
       const result = await knexInstance("schedules")
@@ -123,9 +119,7 @@ export class Database_lookup {
         .select("*");
       return result;
     }
-  
+
     return [];
   }
-}  
-
-
+}

@@ -38,19 +38,19 @@ export const resolvers = {
     },
     //login user
     login: (parent, { email, password }, context, info) => {
-       return connection.login(email, password);
-    }
+      return connection.login(email, password);
+    },
   },
   User: {
     following: async (parent) => {
       console.log("here1");
       const following: User[] = await knexInstance("follows as f")
-      .join("users as u", "u.userId", "f.followedUserId")
-      .select("u.* as following") // select all columns from `u` and alias as `following`
-      .where("f.followingUserId", parent.userId);
-    
-    // const followingUsers = following.map(row => row.following);
+        .join("users as u", "u.userId", "f.followedUserId")
+        .select("u.* as following") // select all columns from `u` and alias as `following`
+        .where("f.followingUserId", parent.userId);
+
+      // const followingUsers = following.map(row => row.following);
       return following;
-  }
-}
+    },
+  },
 };

@@ -12,24 +12,24 @@ export default function Dashboard() {
   return (
     <>
       <Navbar></Navbar>
-        <div>
-            <h1>Dashboard</h1>
-            <p>Welcome, {username}</p>
-            <Link href="/logout">Logout</Link>
-          </div>
+      <div>
+        <h1>Dashboard</h1>
+        <p>Welcome, {username}</p>
+        <Link href="/logout">Logout</Link>
+      </div>
     </>
   );
 }
-export async function getServerSideProps(context:any) {
+export async function getServerSideProps(context: any) {
   const session = await getSession(context);
-  if(!session){
+  if (!session) {
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
       },
-    }
+    };
   }
   return {
     props: { session },
-  }
+  };
 }
