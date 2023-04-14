@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { errorToast, successToast } from "../../components/toasts";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { sign } from "crypto";
 import { signIn } from "next-auth/react";
 import { redirect } from "next/dist/server/api-utils";
@@ -34,11 +34,12 @@ export default function Login() {
   };
 
   async function login() {
-    console.log("login");
+
     const res = await signIn("credentials", {
       username: form.username,
       password: form.password,
       redirect: false,
+      callbackUrl: "/dashboard",
     });
     if (res.error) {
       errorToast("Invalid username or password");
@@ -95,4 +96,17 @@ export default function Login() {
       </div>
     </>
   );
+}
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+  if (session) {
+    return {
+      redirect: {
+        destination: "/dashboard",
+      },
+    };
+  }
+  return {
+    props: { session },
+  };
 }

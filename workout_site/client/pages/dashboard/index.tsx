@@ -5,23 +5,18 @@ import Navbar from "../../components/navbar";
 import { useRouter } from "next/router";
 
 export default function Dashboard() {
-  const router = useRouter();
-  const { data: session } = useSession();
+
   let username: any = "user";
 
   return (
     <>
       <Navbar></Navbar>
-      <div>
-        <h1>Dashboard</h1>
-        <p>Welcome, {username}</p>
-        <Link href="/logout">Logout</Link>
-      </div>
     </>
   );
 }
 export async function getServerSideProps(context: any) {
   const session = await getSession(context);
+  console.log(session);
   if (!session) {
     return {
       redirect: {

@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 const Navbar = () => {
   type props = {
@@ -19,7 +20,7 @@ const Navbar = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="w-64 bg-gray-800 text-white bg-dg-300">
+      <div className="w-64 bg-gray-800 text-white bg-dg-200">
         <div className="p-4">
           <p className="text-[30px] font-bold">
             Gym<span className="text-primary">Social</span>
@@ -54,11 +55,16 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="flex mt-auto p-4">
-          <Link href="/logout">
-            <div className="hover:bg-primary flex items-center">
-              <FiLogOut />{" "}
-            </div>
-          </Link>
+          <div className="hover:bg-primary flex items-center">
+            <FiLogOut
+              onClick={() => {
+                signOut({
+                  redirect: true,
+                  callbackUrl: "/login",
+                });
+              }}
+            />{" "}
+          </div>
         </div>
       </div>
       <div className="flex-1 bg-gray-100"></div>
