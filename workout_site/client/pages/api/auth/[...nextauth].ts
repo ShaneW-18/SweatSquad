@@ -88,7 +88,7 @@ export const authOptions: any = {
       // console.log(url);
       // console.log("baseUrl_______");
       // console.log(baseUrl);
-        baseUrl = "https://workout-dev.swiles.tech";
+        baseUrl = "https://gymsocial.swiles.tech";
         if (url.startsWith('/')){
             return `${baseUrl}${url}`;
         } else if (new URL(url).origin === baseUrl){
