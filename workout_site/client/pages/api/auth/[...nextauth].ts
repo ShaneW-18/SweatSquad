@@ -53,6 +53,12 @@ export const authOptions: any = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 900
+  },
+  jwt: {
+    // The maximum age of the NextAuth.js issued JWT in seconds.
+    // Defaults to `session.maxAge`.
+    maxAge: 900
   },
   secret: "process.env.JWT_SECRET",
   callbacks: {
@@ -65,29 +71,53 @@ export const authOptions: any = {
     },
     async signIn({ user, account, profile, email, credentials }) {
       const allowed = true;
-
+      // console.log("user________");
+      // console.log(user);
+      // console.log("account_________");
+      // console.log(account);
+      // console.log("profile______");
+      // console.log(profile);
+      // console.log("email_______");
+      // console.log(email);
+      // console.log("credentials_______");
+      // console.log(credentials);
       return allowed;
     },
-    // async redirect({ url, baseUrl }){
-    //     if (url.startsWith('/')){
-    //         return `${baseUrl}${url}`;
-    //     } else if (new URL(url).origin === baseUrl){
-    //         return url;
-    //     }
-    //     return baseUrl;
-    // },
+    async redirect({ url, baseUrl }){
+      // console.log("url_______");
+      // console.log(url);
+      // console.log("baseUrl_______");
+      // console.log(baseUrl);
+        if (url.startsWith('/')){
+            return `${baseUrl}${url}`;
+        } else if (new URL(url).origin === baseUrl){
+            return url;
+        }
+        return baseUrl;
+    },
     async jwt({ token, user, account }) {
+      // console.log("token_______");
+      // console.log(token);
+      // console.log("user_______");
+      // console.log(user);
+      // console.log("account_______");
+      // console.log(account);
       if (account) {
         token.accessToken = account.access_token;
       }
       if (user) {
         token.userId = user.userId;
         token.username = user.username;
+        
       }
 
       return token;
     },
   },
+  pages: {
+    signIn: "/login",
+    signOut: "/login",
+  }
 };
 
 export default NextAuth(authOptions);

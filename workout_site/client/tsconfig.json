@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/_app.tsx", "GraphQL/Mutations.js", "GraphQL/Queries.js"  ],
+, "pages/_app.tsx", "GraphQL/Mutations.js", "GraphQL/Queries.js", "pages/logout.tsx"  ],
   "exclude": [
     "node_modules"
   ]
