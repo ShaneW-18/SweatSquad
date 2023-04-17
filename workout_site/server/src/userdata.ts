@@ -51,11 +51,15 @@ export class Database_lookup {
       .where("email", user_temp.email)
       .first();
 
-    if (existingUser) {
+    const existingUsername = await knexInstance("users")
+      .where("username", user_temp.username)
+      .first();
+
+    if (existingUser || existingUsername) {
       return {
         code: 409,
         success: false,
-        message: "Email already in use",
+        message: "Email or Username already in use",
         user: null,
       };
     }

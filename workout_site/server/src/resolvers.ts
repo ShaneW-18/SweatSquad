@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { knexInstance, User } from "./interfaces.js";
+import knex from "knex";
 
 dotenv.config();
 
@@ -13,10 +14,9 @@ export const resolvers = {
     User: (parent, { id }, context, info) => {
       return connection.getUser(id);
     },
-    //get users schedules
-    // user_schedules: (parent, { id }, context, info) => {
-    //   return connection.getUserSchedules(id);
-    // }
+    get_user_username: async (parent, { username }, context, info) => {
+      return await knexInstance("users").where("username", username.toLowerCase()).first();
+    }
   },
   Mutation: {
     //register user
@@ -29,7 +29,7 @@ export const resolvers = {
       password = bcrypt.hashSync(password, 15);
       const temp_user = {
         userId: uuidv4(),
-        username: username,
+        username: username.toLowerCase(),
         password: password,
         email: email,
         description: description,
@@ -53,4 +53,5 @@ export const resolvers = {
       return following;
     },
   },
+
 };
