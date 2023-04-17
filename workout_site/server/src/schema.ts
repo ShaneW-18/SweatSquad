@@ -72,5 +72,6 @@ export const typeDefs = `#graphql
     "Get user by UID"
     User(id: String!): User
     Test: String!
+    get_user_username(username: String!): User
   }
 `;
