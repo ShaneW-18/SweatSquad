@@ -31,7 +31,6 @@ export const typeDefs = `#graphql
     code: Int!
     success: Boolean!
     message: String!
-    schedule: schedule
   }
   type schedule{
     "id of schedule"
@@ -44,7 +43,7 @@ export const typeDefs = `#graphql
     image: String
     "workouts in schedule"
     workouts: [workout]
-    user: User
+    user: User!
   }
   type workout{
     exerciseid: exercise!
@@ -65,6 +64,11 @@ export const typeDefs = `#graphql
     login(email: String!, password: String!): userTypeResponce!
     "Used to add user on register"
     register_user(username: String!, password: String!, email: String!, description: String!): userTypeResponce!
+    "add a schedule to the database"
+    add_schedule(name: String!, description: String, image: String, userId: String!): scheduleResponce!
+    add_track(name:String!, startDate: String!, scheduleId:String!, endDate: String): scheduleResponce!
+    add_workout(name: String!, trackId: String!, isRestDay: Boolean!, order: Int!): scheduleResponce!
+    add_exercise(name: String!, workoutId: String!, sets: Int, reps: Int, description: String): scheduleResponce!
   }
   type Query{
     "all of user schedules"
