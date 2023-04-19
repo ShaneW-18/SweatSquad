@@ -9,6 +9,7 @@ export default function User({userData}: any){
     const { username } = router.query;
 
 
+    const profileImage = userData.image ?? 'https://api.tecesports.com/images/general/user.png';
 
     async function followUser(){
 
@@ -20,7 +21,25 @@ export default function User({userData}: any){
 
     return (
         <Content>
-            <h1>username</h1>
+            <div className='h-full grid grid-cols-1 relative'>
+                <div className='gym-bg no-h'>
+                    
+                </div>
+                <div className='bg-dg-100'>
+
+                </div>
+                <div className='profile-box rounded-md bg-dg-300 '>
+                    <div className='w-full h-full relative px-4 py-2'>
+                        <div className='profile-image bg-dg-100 rounded-full' style={{backgroundImage: `url(${profileImage})`}}>
+
+                        </div>
+                        <div className='flex items-center gap-2'>
+                            <button className=' px-3 bg-primary hover:bg-primary-h rounded-md text-sm font-semibold uppercase'>info</button>
+                            <button className=' px-3 bg-primary hover:bg-primary-h rounded-md text-sm font-semibold uppercase'>schedules</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </Content>
     );
 }
