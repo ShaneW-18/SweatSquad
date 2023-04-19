@@ -21,7 +21,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 const link = from([
   errorLink,
-  new HttpLink({ uri: "https://workout-dev.swiles.tech" }),
+  new HttpLink({ uri: "https://workout-dev.swiles.tech/" }),
 ]);
 
 const client = new ApolloClient({

@@ -4,9 +4,19 @@ export const GET_USER_BY_ID = gql`
     User(id: $userId) {
       description
       email
-      password
       userId
       username
     }
   }
 `;
+
+export const GET_USERDATA_BY_USERNAME = gql`
+query Query($username: String!) {
+  get_user_username(username: $username) {
+    description
+    email
+    userId
+  }
+}
+`;
+

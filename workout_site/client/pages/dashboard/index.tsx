@@ -1,7 +1,7 @@
 import { getSession, useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import Navbar from "../../components/navbar";
+import Content from "../../components/Content";
 import { useRouter } from "next/router";
 
 export default function Dashboard() {
@@ -10,14 +10,11 @@ export default function Dashboard() {
   let username: any = "user";
 
   return (
-    <>
-      <Navbar></Navbar>
-      <div>
-        <h1>Dashboard</h1>
-        <p>Welcome, {username}</p>
-        <Link href="/logout">Logout</Link>
-      </div>
-    </>
+    <Content>
+      <h1>Dashboard</h1>
+      <p>Welcome, {username}</p>
+      <Link href="/logout">Logout</Link>
+    </Content>
   );
 }
 export async function getServerSideProps(context: any) {
