@@ -2,9 +2,13 @@ import { Database_lookup } from "./userdata.js";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import * as schedule_Types from "./Types/schedule.js";
+import * as schedule_Types from "./Types/main.js";
+import * as responces from "./Types/responces.js";
 import { knexInstance, User } from "./interfaces.js";
+import * as user_Querys from "./resolvers/User/querys.js";
+import * as user_Mutations from "./resolvers/User/mutations.js";
 import knex from "knex";
+import * as types from "./Types/main.js";
 
 dotenv.config();
 
@@ -12,33 +16,27 @@ const connection = new Database_lookup();
 export const resolvers = {
   Query: {
     //get user by id
-    User: (parent, { id }, context, info) => {
-      console.log(typeof id);
-      return connection.getUser(id);
+    User: async (parent, { id }, context, info) => {
+      return await user_Querys.get_user_by_id(id);
     },
     get_user_username: async (parent, { username }, context, info) => {
-      return await knexInstance("users")
-        .where("username", username.toLowerCase())
-        .first();
+      return await user_Querys.get_user_by_username(username);
     },
   },
   Mutation: {
     //register user
-    register_user: (
+    register_user: async (
       parent,
-      { username, password, email, description, age },
+      { username, password, email, description },
       context,
       info
     ) => {
-      password = bcrypt.hashSync(password, 15);
-      const temp_user = {
-        userId: uuidv4(),
-        username: username.toLowerCase(),
-        password: password,
-        email: email,
-        description: description,
-      };
-      return connection.addUser(temp_user);
+      return await user_Mutations.register_user(
+        username,
+        password,
+        email,
+        description
+      );
     },
     //login user
     login: (parent, { email, password }, context, info) => {
@@ -52,14 +50,14 @@ export const resolvers = {
       context,
       info
     ) => {
-      let responce: schedule_Types.scheduleResponce = {
+      let responce: responces.scheduleResponce = {
         code: 500,
         success: false,
         message: "sever error",
+        schedule: null,
       };
-      const uuid = uuidv4();
       const temp_schedule: schedule_Types.ScheduleDB = {
-        scheduleId: uuid,
+        scheduleId: uuidv4(),
         name: name,
         description: description == undefined ? null : description,
         image: image == undefined ? null : image,
@@ -67,11 +65,13 @@ export const resolvers = {
       };
       try {
         await knexInstance("schedules").insert(temp_schedule);
-        await knexInstance("schedules").where("scheduleId", uuid).first();
+        await knexInstance("schedules").where("scheduleId", temp_schedule.scheduleId).first();
+      
         return (responce = {
           code: 200,
           success: true,
           message: "schedule created",
+          schedule: temp_schedule,
         });
       } catch (err) {
         console.log(err);
@@ -94,7 +94,7 @@ export const resolvers = {
         endDate: endDate == undefined ? null : endDate,
       };
 
-      let responce: schedule_Types.scheduleResponce = {
+      let responce: responces.scheduleResponce = {
         code: 500,
         success: false,
         message: "sever error",
@@ -127,7 +127,7 @@ export const resolvers = {
         isRestDay: isRestDay,
         trackId: trackId,
       };
-      let responce: schedule_Types.scheduleResponce = {
+      let responce: responces.scheduleResponce = {
         code: 500,
         success: false,
         message: "sever error",
@@ -162,7 +162,7 @@ export const resolvers = {
         sets: sets == undefined ? null : sets,
         reps: reps == undefined ? null : reps,
       };
-      let responce: schedule_Types.scheduleResponce = {
+      let responce: responces.scheduleResponce = {
         code: 500,
         success: false,
         message: "sever error",

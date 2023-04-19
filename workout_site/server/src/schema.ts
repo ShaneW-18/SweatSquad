@@ -15,6 +15,8 @@ export const typeDefs = `#graphql
     description: String
     "other users that are followed by current user"
     following: [User]
+    "profile image of user"
+    image: String
   }
   "responce structure for login and register"
   type userTypeResponce{
@@ -31,6 +33,7 @@ export const typeDefs = `#graphql
     code: Int!
     success: Boolean!
     message: String!
+    Schedule: schedule
   }
   type schedule{
     "id of schedule"
@@ -63,7 +66,7 @@ export const typeDefs = `#graphql
     "The login mutation takes a username and password as arguments,and returns an AuthPayload object containing the user token and user object."
     login(email: String!, password: String!): userTypeResponce!
     "Used to add user on register"
-    register_user(username: String!, password: String!, email: String!, description: String!): userTypeResponce!
+    register_user(username: String!, password: String!, email: String!, description: String): userTypeResponce!
     "add a schedule to the database"
     add_schedule(name: String!, description: String, image: String, userId: String!): scheduleResponce!
     add_track(name:String!, startDate: String!, scheduleId:String!, endDate: String): scheduleResponce!
@@ -74,8 +77,8 @@ export const typeDefs = `#graphql
     "all of user schedules"
     user_schedules(id: String!): [schedule!]!
     "Get user by UID"
-    User(id: String!): User
+    User(id: String!): userTypeResponce!
     Test: String!
-    get_user_username(username: String!): User
+    get_user_username(username: String!): userTypeResponce!
   }
 `;
