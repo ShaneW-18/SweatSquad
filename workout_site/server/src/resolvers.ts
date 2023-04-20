@@ -50,120 +50,36 @@ export const resolvers = {
       context,
       info
     ) => {
-    
-    return await schedule_Mutations.create_schedule(name, description, image, userId);
-
+      return await schedule_Mutations.create_schedule(
+        name,
+        description,
+        image,
+        userId
+      );
     },
 
     //create a new track
-    add_track: async (
-      parent,
-      { userId, name, description },
-      context,
-      info
-    ) => {
-      const track: schedule_Types.TrackDB = {
-        trackId: uuidv4(),
-        name: name,
-        description: description == undefined ? "" : description,
-        userId: userId,
-
-      };
-
-      let responce: responces.scheduleResponce = {
-        code: 500,
-        success: false,
-        message: "sever error",
-        schedule: null,
-
-      };
-      try {
-        await knexInstance("tracks").insert(track);
-        await knexInstance("tracks").where("trackId", track.trackId).first();
-        return (responce = {
-          code: 200,
-          success: true,
-          message: "track created",
-          schedule: null,
-        });
-      } catch (err) {
-        console.log(err);
-        return responce;
-      }
+    add_track: async (parent, { userId, name, description }, context, info) => {
+      return await schedule_Mutations.create_track(userId, name, description);
     },
 
     //create a new workout
     add_workout: async (
       parent,
-      { name, order, isRestDay, trackId },
+      { name, isRestDay, description, userId },
       context,
       info
     ) => {
-      const workout: schedule_Types.WorkoutDB = {
-        workoutId: uuidv4(),
-        name: name,
-        order: order,
-        isRestDay: isRestDay,
-        trackId: trackId,
-      };
-      let responce: responces.scheduleResponce = {
-        code: 500,
-        success: false,
-        message: "sever error",
-        schedule: null,
-      };
-      try {
-        await knexInstance("workouts").insert(workout);
-        await knexInstance("workouts")
-          .where("workoutId", workout.workoutId)
-          .first();
-        return (responce = {
-          code: 200,
-          success: true,
-          message: "workout created",
-          schedule: null,
-        });
-      } catch (err) {
-        console.log(err);
-        return responce;
-      }
+      return await schedule_Mutations.create_workout(
+        name,
+        isRestDay,
+        description,
+        userId
+      );
     },
     //add exercise
-    add_exercise: async (
-      parent,
-      { name, description, workoutId, sets, reps },
-      context,
-      info
-    ) => {
-      const exercise: schedule_Types.ExerciseDB = {
-        exerciseId: uuidv4(),
-        name: name,
-        description: description == undefined ? null : description,
-        workoutId: workoutId,
-        sets: sets == undefined ? null : sets,
-        reps: reps == undefined ? null : reps,
-      };
-      let responce: responces.scheduleResponce = {
-        code: 500,
-        success: false,
-        message: "sever error",
-        schedule: null,
-      };
-      try {
-        await knexInstance("exercises").insert(exercise);
-        await knexInstance("exercises")
-          .where("exerciseId", exercise.exerciseId)
-          .first();
-        return (responce = {
-          code: 200,
-          success: true,
-          message: "exercise created",
-          schedule: null,
-        });
-      } catch (err) {
-        console.log(err);
-        return responce;
-      }
+    add_exercise: async (parent, { name, description }, context, info) => {
+      return await schedule_Mutations.create_exercise(name, description);
     },
   },
 
@@ -184,9 +100,29 @@ export const resolvers = {
       return user;
     },
     tracks: async (parent) => {
-      console.log("parent in function");
-      console.log(parent);
       return null;
-    }
-  }
+    },
+  },
+  track: {
+    user: async (parent) => {
+      const user: types.User = await knexInstance("users")
+        .where("userId", parent.userId)
+        .first();
+      return user;
+    },
+    workouts: async (parent) => {
+      return null;
+    },
+  },
+  workout: {
+    user: async (parent) => {
+      const user: types.User = await knexInstance("users")
+        .where("userId", parent.userId)
+        .first();
+      return user;
+    },
+    exercises: async (parent) => {
+      return null;
+    },
+  },
 };

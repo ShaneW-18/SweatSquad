@@ -34,7 +34,25 @@ export const typeDefs = `#graphql
     message: String!
     schedule: schedule
   }
-  
+  type trackResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    track: track
+  }
+
+  type workoutResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    workout: workout
+  }
+  type exerciseResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    exercise: exercise
+  }
   type schedule{
     "id of schedule"
     scheduleId: String!
@@ -53,8 +71,7 @@ export const typeDefs = `#graphql
     description: String
     isRestDay: Boolean!
     name: String!
-    days: Int!
-    User: User!
+    user: User!
     exercises: [exercise]
   }
   type exercise{
@@ -67,7 +84,7 @@ export const typeDefs = `#graphql
     trackId: String!
     description: String
     user: User!
-    workouts: [workout]!
+    workouts: [workout]
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -80,9 +97,9 @@ export const typeDefs = `#graphql
     register_user(username: String!, password: String!, email: String!, description: String): userTypeResponce!
     "add a schedule to the database"
     add_schedule(name: String!, description: String, image: String, userId: String!): scheduleResponce!
-    add_track(name:String!, startDate: String!, scheduleId:String!, endDate: String): scheduleResponce!
-    add_workout(name: String!, trackId: String!, isRestDay: Boolean!, order: Int!): scheduleResponce!
-    add_exercise(name: String!, workoutId: String!, sets: Int, reps: Int, description: String): scheduleResponce!
+    add_track(name:String!, description:String, userId:String!): trackResponce!
+    add_workout(name: String!, isRestDay: Boolean!, description: String, userId: String!): workoutResponce!
+    add_exercise(name: String!, description: String): exerciseResponce!
   }
   type Query{
     "all of user schedules"

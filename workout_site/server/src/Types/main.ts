@@ -49,10 +49,10 @@ export type TrackDB = {
 };
 export type WorkoutDB = {
   workoutId: String;
-  trackId: String;
-  order: Number;
+  description?: String;
   isRestDay: Boolean;
   name: String;
+  userId: uuidv4;
 };
 export type Workout = {
   workoutId: String;
@@ -66,10 +66,7 @@ export type Workout = {
 export type ExerciseDB = {
   name: String;
   description?: String;
-  workoutId: String;
   exerciseId: String;
-  sets: Number;
-  reps: Number;
 };
 export type Exercise = {
   name: String;
