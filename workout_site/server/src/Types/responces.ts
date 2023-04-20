@@ -29,3 +29,14 @@ export type getUserResponce = {
   message: String;
   user: types.User;
 };
+export type genericResponce = {
+  code: Number;
+  success: Boolean;
+  message: String;
+};
+export type getScheduleResponce = {
+  code: Number;
+  success: Boolean;
+  message: String;
+  schedule: types.Schedule[]
+}

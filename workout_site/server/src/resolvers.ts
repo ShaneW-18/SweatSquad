@@ -7,6 +7,7 @@ import * as responces from "./Types/responces.js";
 import { knexInstance, User } from "./interfaces.js";
 import * as user_Querys from "./resolvers/User/querys.js";
 import * as user_Mutations from "./resolvers/User/mutations.js";
+import * as schedule_Querys from "./resolvers/schedule/querys.js";
 import knex from "knex";
 import * as types from "./Types/main.js";
 import * as schedule_Mutations from "./resolvers/schedule/mutations.js";
@@ -22,6 +23,9 @@ export const resolvers = {
     get_user_username: async (parent, { username }, context, info) => {
       return await user_Querys.get_user_by_username(username);
     },
+    get_schedule_by_id: async (parent, { userId }, context, info) => {
+      return await schedule_Querys.get_schedule_by_username(userId);
+    }
   },
   Mutation: {
     //register user
@@ -81,7 +85,18 @@ export const resolvers = {
     add_exercise: async (parent, { name, description }, context, info) => {
       return await schedule_Mutations.create_exercise(name, description);
     },
+    add_track_to_schedule: async (parent, { trackId, scheduleId, start, end }, context, info) => {
+      return await schedule_Mutations.add_track_to_schedule(trackId, scheduleId, start, end);
+    }, 
+    add_workout_to_track: async (parent, { workoutId, trackId, order }, context, info) => {
+      return await schedule_Mutations.add_workout_to_track(workoutId, trackId, order);
+    },
+    add_exercise_to_workout: async (parent, { exerciseId, workoutId, reps, sets, time, order }, context, info) => {
+      return await schedule_Mutations.add_exercise_to_workout(exerciseId, workoutId, reps, sets, time, order);
+    }
+
   },
+
 
   User: {
     following: async (parent) => {
@@ -100,7 +115,12 @@ export const resolvers = {
       return user;
     },
     tracks: async (parent) => {
-      return null;
+      const tracks: types.Track[] = await knexInstance("tracks as t")
+        .join("track_schedules as st", "st.trackId", "t.trackId")
+        .select("t.* as track")
+        .where("st.scheduleId", parent.scheduleId);
+      
+      return tracks;
     },
   },
   track: {
@@ -111,7 +131,11 @@ export const resolvers = {
       return user;
     },
     workouts: async (parent) => {
-      return null;
+      const workouts: types.Workout[] = await knexInstance("workouts as w")
+        .join("workout_tracks as tw", "tw.workoutId", "w.workoutId")
+        .select("w.* as workout")
+        .where("tw.trackId", parent.trackId);
+      return workouts;
     },
   },
   workout: {
@@ -122,7 +146,11 @@ export const resolvers = {
       return user;
     },
     exercises: async (parent) => {
-      return null;
+      const exercises: types.Exercise[] = await knexInstance("exercises as e")
+        .join("exercise_workouts as we", "we.exerciseId", "e.exerciseId")
+        .select("e.* as exercise")
+        .where("we.workoutId", parent.workoutId);
+      return exercises;
     },
   },
 };
