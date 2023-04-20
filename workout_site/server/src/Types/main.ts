@@ -23,9 +23,9 @@ export type Schedule = {
   name: String;
   description?: String;
   image?: String;
-  userId: uuidv4;
+  user: User;
   tracks?: [Track];
-}
+};
 
 export type ScheduleDB = {
   scheduleId: String;
@@ -40,13 +40,12 @@ export type Track = {
   description?: String;
   user: User;
   workouts?: [Workout];
-}
+};
 export type TrackDB = {
-  name: uuidv4;
-  scheduleId: uuidv4;
-  startDate: Date;
-  endDate?: Date;
+  name: String;
+  description?: String;
   trackId: uuidv4;
+  userId: uuidv4;
 };
 export type WorkoutDB = {
   workoutId: String;
@@ -63,7 +62,7 @@ export type Workout = {
   days: Number;
   User: User;
   exercises?: [Exercise];
-}
+};
 export type ExerciseDB = {
   name: String;
   description?: String;
@@ -76,4 +75,4 @@ export type Exercise = {
   name: String;
   description?: String;
   exersiceId: String;
-}
+};

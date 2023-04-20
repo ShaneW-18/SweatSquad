@@ -8,7 +8,7 @@ import { GraphQLError } from "graphql";
 // The ApolloServer constructor requires two parameters: your schema
 const allowedOrgins = [
   "http://localhost:3000",
-  "http://localhost:4001",
+  "http://localhost:4000",
   "https://gymsocial.swiles.tech",
 ];
 const server = new ApolloServer({
@@ -35,7 +35,7 @@ const { url } = await startStandaloneServer(server, {
     }
   },
 
-  listen: { port: 4001 },
+  listen: { port: 4000 },
 });
 
 console.log(`Server ready at: ${url}`);

@@ -9,7 +9,7 @@ import * as user_Querys from "./resolvers/User/querys.js";
 import * as user_Mutations from "./resolvers/User/mutations.js";
 import knex from "knex";
 import * as types from "./Types/main.js";
-
+import * as schedule_Mutations from "./resolvers/schedule/mutations.js";
 dotenv.config();
 
 const connection = new Database_lookup();
@@ -50,54 +50,32 @@ export const resolvers = {
       context,
       info
     ) => {
-      let responce: responces.scheduleResponce = {
-        code: 500,
-        success: false,
-        message: "sever error",
-        schedule: null,
-      };
-      const temp_schedule: schedule_Types.ScheduleDB = {
-        scheduleId: uuidv4(),
-        name: name,
-        description: description == undefined ? null : description,
-        image: image == undefined ? null : image,
-        userId: userId,
-      };
-      try {
-        await knexInstance("schedules").insert(temp_schedule);
-        await knexInstance("schedules").where("scheduleId", temp_schedule.scheduleId).first();
-      
-        return (responce = {
-          code: 200,
-          success: true,
-          message: "schedule created",
-          schedule: temp_schedule,
-        });
-      } catch (err) {
-        console.log(err);
-        return responce;
-      }
+    
+    return await schedule_Mutations.create_schedule(name, description, image, userId);
+
     },
 
     //create a new track
     add_track: async (
       parent,
-      { name, scheduleId, startDate, endDate },
+      { userId, name, description },
       context,
       info
     ) => {
       const track: schedule_Types.TrackDB = {
         trackId: uuidv4(),
         name: name,
-        scheduleId: scheduleId,
-        startDate: startDate,
-        endDate: endDate == undefined ? null : endDate,
+        description: description == undefined ? "" : description,
+        userId: userId,
+
       };
 
       let responce: responces.scheduleResponce = {
         code: 500,
         success: false,
         message: "sever error",
+        schedule: null,
+
       };
       try {
         await knexInstance("tracks").insert(track);
@@ -106,6 +84,7 @@ export const resolvers = {
           code: 200,
           success: true,
           message: "track created",
+          schedule: null,
         });
       } catch (err) {
         console.log(err);
@@ -131,6 +110,7 @@ export const resolvers = {
         code: 500,
         success: false,
         message: "sever error",
+        schedule: null,
       };
       try {
         await knexInstance("workouts").insert(workout);
@@ -141,6 +121,7 @@ export const resolvers = {
           code: 200,
           success: true,
           message: "workout created",
+          schedule: null,
         });
       } catch (err) {
         console.log(err);
@@ -166,6 +147,7 @@ export const resolvers = {
         code: 500,
         success: false,
         message: "sever error",
+        schedule: null,
       };
       try {
         await knexInstance("exercises").insert(exercise);
@@ -176,6 +158,7 @@ export const resolvers = {
           code: 200,
           success: true,
           message: "exercise created",
+          schedule: null,
         });
       } catch (err) {
         console.log(err);
@@ -186,7 +169,6 @@ export const resolvers = {
 
   User: {
     following: async (parent) => {
-      console.log("here1");
       const following: User[] = await knexInstance("follows as f")
         .join("users as u", "u.userId", "f.followedUserId")
         .select("u.* as following") // select all columns from `u` and alias as `following`
@@ -194,4 +176,17 @@ export const resolvers = {
       return following;
     },
   },
+  schedule: {
+    user: async (parent) => {
+      const user: types.User = await knexInstance("users")
+        .where("userId", parent.userId)
+        .first();
+      return user;
+    },
+    tracks: async (parent) => {
+      console.log("parent in function");
+      console.log(parent);
+      return null;
+    }
+  }
 };

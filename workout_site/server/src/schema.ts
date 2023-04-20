@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-
 export const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
@@ -33,11 +32,12 @@ export const typeDefs = `#graphql
     code: Int!
     success: Boolean!
     message: String!
-    Schedule: schedule
+    schedule: schedule
   }
+  
   type schedule{
     "id of schedule"
-    scheduleid: Int!
+    scheduleId: String!
     "name of schedule"
     name: String!
     "description of schedule"
@@ -45,18 +45,29 @@ export const typeDefs = `#graphql
     "image of schedule"
     image: String
     "workouts in schedule"
-    workouts: [workout]
+    tracks: [track]
     user: User!
   }
   type workout{
-    exerciseid: exercise!
-    sets: Int
-    reps: Int
-    workoutId: Int!
+    workoutId: String!
+    description: String
+    isRestDay: Boolean!
+    name: String!
+    days: Int!
+    User: User!
+    exercises: [exercise]
   }
   type exercise{
     name: String!
     description: String
+    exerciseId: String!
+  }
+  type track{
+    name: String!
+    trackId: String!
+    description: String
+    user: User!
+    workouts: [workout]!
   }
 
   # The "Query" type is special: it lists all of the available queries that
