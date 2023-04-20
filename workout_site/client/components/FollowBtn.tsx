@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 
-export default function FollowBtn({userId, targetUserId, isFollowing=false, showText=true}){
+export default function FollowBtn({userId, targetUserId, isFollowing=false, showText=true}: any){
 
     const [following, setFollowing] = useState(isFollowing);
 
@@ -17,7 +17,7 @@ export default function FollowBtn({userId, targetUserId, isFollowing=false, show
 
     if (!following){
         return (
-            <button className='border-2 border-primary text-primary font-semibold px-2 py-1 flex items-center gap-2' onClick={handleClick}>
+            <button className='border-2 border-primary text-primary font-semibold px-2 py-1 flex items-center gap-2 rounded-md' onClick={handleClick}>
                 <AiOutlineUserAdd />
                 {showText && 'Follow'}      
             </button>
@@ -25,7 +25,7 @@ export default function FollowBtn({userId, targetUserId, isFollowing=false, show
     }
 
     return (
-        <button className='--bg bg-primary hover:bg-primary-h text-white font-semibold px-2 py-1 flex items-center gap-2' onClick={handleClick}>
+        <button className='border-2 border-primary --bg bg-primary hover:border-primary-h hover:bg-primary-h text-white font-semibold px-2 py-1 flex items-center gap-2 rounded-md' onClick={handleClick}>
             <AiOutlineUserDelete />
             {showText && 'Unfollow'}
         </button>
