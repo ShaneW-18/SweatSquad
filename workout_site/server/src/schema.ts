@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-
 export const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
@@ -15,6 +14,8 @@ export const typeDefs = `#graphql
     description: String
     "other users that are followed by current user"
     following: [User]
+    "profile image of user"
+    image: String
   }
   "responce structure for login and register"
   type userTypeResponce{
@@ -33,9 +34,28 @@ export const typeDefs = `#graphql
     message: String!
     schedule: schedule
   }
+  type trackResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    track: track
+  }
+
+  type workoutResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    workout: workout
+  }
+  type exerciseResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    exercise: exercise
+  }
   type schedule{
     "id of schedule"
-    scheduleid: Int!
+    scheduleId: String!
     "name of schedule"
     name: String!
     "description of schedule"
@@ -43,18 +63,28 @@ export const typeDefs = `#graphql
     "image of schedule"
     image: String
     "workouts in schedule"
-    workouts: [workout]
-    user: User
+    tracks: [track]
+    user: User!
   }
   type workout{
-    exerciseid: exercise!
-    sets: Int
-    reps: Int
-    workoutId: Int!
+    workoutId: String!
+    description: String
+    isRestDay: Boolean!
+    name: String!
+    user: User!
+    exercises: [exercise]
   }
   type exercise{
     name: String!
     description: String
+    exerciseId: String!
+  }
+  type track{
+    name: String!
+    trackId: String!
+    description: String
+    user: User!
+    workouts: [workout]
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -64,14 +94,19 @@ export const typeDefs = `#graphql
     "The login mutation takes a username and password as arguments,and returns an AuthPayload object containing the user token and user object."
     login(email: String!, password: String!): userTypeResponce!
     "Used to add user on register"
-    register_user(username: String!, password: String!, email: String!, description: String!): userTypeResponce!
+    register_user(username: String!, password: String!, email: String!, description: String): userTypeResponce!
+    "add a schedule to the database"
+    add_schedule(name: String!, description: String, image: String, userId: String!): scheduleResponce!
+    add_track(name:String!, description:String, userId:String!): trackResponce!
+    add_workout(name: String!, isRestDay: Boolean!, description: String, userId: String!): workoutResponce!
+    add_exercise(name: String!, description: String): exerciseResponce!
   }
   type Query{
     "all of user schedules"
     user_schedules(id: String!): [schedule!]!
     "Get user by UID"
-    User(id: String!): User
+    User(id: String!): userTypeResponce!
     Test: String!
-    get_user_username(username: String!): User
+    get_user_username(username: String!): userTypeResponce!
   }
 `;
