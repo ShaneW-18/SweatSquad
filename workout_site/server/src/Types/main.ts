@@ -23,6 +23,7 @@ export type Schedule = {
   name: String;
   description?: String;
   image?: String;
+  userId: uuidv4;
   user: User;
   tracks?: [Track];
 };
@@ -73,3 +74,25 @@ export type Exercise = {
   description?: String;
   exersiceId: String;
 };
+export type trackSceduleDB = {
+  trackScheduleId: uuidv4;
+  trackId: uuidv4;
+  scheduleId: uuidv4;
+  start: Date;
+  end?: Date;
+}
+export type workoutTrackDB = {
+  workoutTrackId: uuidv4;
+  workoutId: uuidv4;
+  trackId: uuidv4;
+  order: Number;
+}
+export type exerciseWorkoutDB = {
+  exerciseWorkoutId: uuidv4;
+  workoutId: uuidv4;
+  exerciseId: uuidv4;
+  sets: Number;
+  reps: Number;
+  time: Number;
+  order: Number;
+}
