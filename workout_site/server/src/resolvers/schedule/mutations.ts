@@ -163,7 +163,14 @@ export async function add_workout_to_track(workoutId, trackId, order) {
   return responce;
 }
 
-export async function add_exercise_to_workout( exerciseId, workoutId, reps, sets, time, order ) {
+export async function add_exercise_to_workout(
+  exerciseId,
+  workoutId,
+  reps,
+  sets,
+  time,
+  order
+) {
   let responce: responces.genericResponce = {
     code: 500,
     success: false,
@@ -176,7 +183,7 @@ export async function add_exercise_to_workout( exerciseId, workoutId, reps, sets
     reps: reps,
     sets: sets,
     time: time,
-    order: order
+    order: order,
   };
   try {
     await knexInstance("exercise_workouts").insert(workoutExercise);
@@ -188,6 +195,127 @@ export async function add_exercise_to_workout( exerciseId, workoutId, reps, sets
   }
   return responce;
 }
-export async function edit_schedule(){
-  
+export async function edit_schedule(name, description, image, scheduleId) {
+  let responce: responces.scheduleResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+    schedule: null,
+  };
+  try {
+    if (name || description || image) {
+      await knexInstance("schedules").where("scheduleId", scheduleId).update({
+        name: name,
+        description: description,
+        image: image,
+      });
+    } else {
+      responce.code = 400;
+      responce.success = false;
+      responce.message = "nothing sent to change";
+      return responce;
+    }
+    responce.code = 200;
+    responce.success = true;
+    responce.message = "schedule edited";
+    responce.schedule = await knexInstance("schedules")
+      .where("scheduleId", scheduleId)
+      .first();
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function edit_track (trackId, name, description) {
+  let responce: responces.trackResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+    track: null,
+  };
+  console.log(trackId, name, description);
+  try {
+    if (name || description) {
+      await knexInstance("tracks").where("trackId", trackId).update({
+        name: name,
+        description: description,
+      });
+    } else {
+      responce.code = 400;
+      responce.success = false;
+      responce.message = "nothing sent to change";
+      return responce;
+    }
+    responce.code = 200;
+    responce.success = true;
+    responce.message = "track edited";
+    responce.track = await knexInstance("tracks")
+    .where("trackId", trackId)
+    .first();
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function edit_workout(name, description, isRestDay, workoutId) {
+  let responce: responces.workoutResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+    workout: null,
+  };
+  try {
+    if (name || description || isRestDay) {
+      await knexInstance("workouts").where("workoutId", workoutId).update({
+        name: name,
+        description: description,
+        isRestDay: isRestDay,
+      });
+    } else {
+      responce.code = 400;
+      responce.success = false;
+      responce.message = "nothing sent to change";
+      return responce;
+    }
+    responce.code = 200;
+    responce.success = true;
+    responce.message = "workout edited";
+    responce.workout = await knexInstance("workouts")
+      .where("workoutId", workoutId)
+      .first();
+      console.log(responce.workout);
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function edit_exercise(exerciseId, name, description) {
+  let responce: responces.exerciseResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+    exercise: null,
+  };
+  try {
+    if (name || description) {
+      await knexInstance("exercises").where("exerciseId", exerciseId).update({
+        name: name,
+        description: description,
+      });
+    } else {
+      responce.code = 400;
+      responce.success = false;
+      responce.message = "nothing sent to change";
+      return responce;
+    }
+    responce.code = 200;
+    responce.success = true;
+    responce.message = "exercise edited";
+    responce.exercise = await knexInstance("exercises")
+      .where("exerciseId", exerciseId)
+      .first();
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
 }

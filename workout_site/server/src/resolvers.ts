@@ -25,10 +25,9 @@ export const resolvers = {
     },
     get_all_schedules_by_userId: async (parent, { userId }, context, info) => {
       return await schedule_Querys.get_schedule_by_username(userId);
-
     },
-    get_all_tracks_by_userId:async (parent,{userId}, context, info) => {
-      return  await schedule_Querys.get_all_tracks_by_userId(userId);
+    get_all_tracks_by_userId: async (parent, { userId }, context, info) => {
+      return await schedule_Querys.get_all_tracks_by_userId(userId);
     },
     get_all_workouts_by_userId: async (parent, { userId }, context, info) => {
       return await schedule_Querys.get_all_workouts_by_userId(userId);
@@ -38,8 +37,7 @@ export const resolvers = {
     },
     search_exercises: async (parent, { name }, context, info) => {
       return await schedule_Querys.search_exercises(name);
-    }
-    
+    },
   },
   Mutation: {
     //register user
@@ -99,31 +97,90 @@ export const resolvers = {
     add_exercise: async (parent, { name, description }, context, info) => {
       return await schedule_Mutations.create_exercise(name, description);
     },
-    add_track_to_schedule: async (parent, { trackId, scheduleId, start, end }, context, info) => {
-      return await schedule_Mutations.add_track_to_schedule(trackId, scheduleId, start, end);
-    }, 
-    add_workout_to_track: async (parent, { workoutId, trackId, order }, context, info) => {
-      return await schedule_Mutations.add_workout_to_track(workoutId, trackId, order);
+    add_track_to_schedule: async (
+      parent,
+      { trackId, scheduleId, start, end },
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.add_track_to_schedule(
+        trackId,
+        scheduleId,
+        start,
+        end
+      );
     },
-    add_exercise_to_workout: async (parent, { exerciseId, workoutId, reps, sets, time, order }, context, info) => {
-      return await schedule_Mutations.add_exercise_to_workout(exerciseId, workoutId, reps, sets, time, order);
+    add_workout_to_track: async (
+      parent,
+      { workoutId, trackId, order },
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.add_workout_to_track(
+        workoutId,
+        trackId,
+        order
+      );
     },
-    // edit_schedule: async (parent, { scheduleId, name, description, image }, context, info) => {
-    //   return await schedule_Mutations.edit_schedule(scheduleId, name, description, image);
-    // },
-    // edit_track: async (parent, { trackId, name, description }, context, info) => {
-    //   return await schedule_Mutations.edit_track(trackId, name, description);
-    // },
-    // edit_workout: async (parent, { workoutId, name, isRestDay, description }, context, info) => {
-    //   return await schedule_Mutations.edit_workout(workoutId, name, isRestDay, description);
-    // },
-    // edit_exercise: async (parent, { exerciseId, name, description }, context, info) => {
-    //   return await schedule_Mutations.edit_exercise(exerciseId, name, description);
-    // }
-
-
+    add_exercise_to_workout: async (
+      parent,
+      { exerciseId, workoutId, reps, sets, time, order },
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.add_exercise_to_workout(
+        exerciseId,
+        workoutId,
+        reps,
+        sets,
+        time,
+        order
+      );
+    },
+    edit_schedule: async (
+      parent,
+      {name, description, image, scheduleId},
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.edit_schedule(
+        name,
+        description,
+        image,
+        scheduleId
+      );
+    },
+    edit_track: async (
+      parent,
+      { trackId, name, description },
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.edit_track(trackId, name, description);
+    },
+    edit_workout: async (
+      parent,
+      {name, description, isRestDay, workoutId},
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.edit_workout(
+        name, description, isRestDay, workoutId
+      );
+    },
+    edit_exercise: async (
+      parent,
+      { exerciseId, name, description },
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.edit_exercise(
+        exerciseId,
+        name,
+        description
+      );
+    },
   },
-
 
   User: {
     following: async (parent) => {
@@ -146,7 +203,7 @@ export const resolvers = {
         .join("track_schedules as st", "st.trackId", "t.trackId")
         .select("t.* as track")
         .where("st.scheduleId", parent.scheduleId);
-      
+
       return tracks;
     },
   },
