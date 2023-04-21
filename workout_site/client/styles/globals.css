@@ -13,6 +13,15 @@ body {
   overflow-x: hidden;
 }
 
+.a-mw {
+  max-width:100%;
+  transition: .2s max-width ease;
+}
+
+.hide-btn {
+  max-width: 0px;
+}
+
 button {
   transition: .2s background-color ease;
 }

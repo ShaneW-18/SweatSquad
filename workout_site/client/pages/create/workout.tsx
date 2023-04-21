@@ -36,6 +36,7 @@ export default function Schedule() {
     const [searchExercise, {data}] = useLazyQuery(SEARCH_EXERCISES);
 
     const [dragging, setDragging] = useState(false);
+    const [edesc, setEDesc] = useState(false);
 
     const [eform, seteForm] = useState({
         name: '',
@@ -48,7 +49,7 @@ export default function Schedule() {
     });
 
     const [suggestions, setSuggestions] = useState([]);
-    const [exercises, setExercises] = useState(D_WKTS);
+    const [exercises, setExercises] = useState([]);
     const { data: session, status } = useSession();
 
     const dragStart = (e, pos) => {
@@ -106,7 +107,7 @@ export default function Schedule() {
         tempForm[target.name] = target.value;
         seteForm(tempForm);
 
-        if(target.value < MIN_QUERY_LEN){
+        if(target.value.length < MIN_QUERY_LEN){
             setSuggestions([]);
             return;
         }
@@ -120,12 +121,15 @@ export default function Schedule() {
             return data;
         });
 
+        /** TODO: implement caching here */
+
         if (!('search_exercises' in res)){
             errorToast('Error');
             return;
         }
 
-        setSuggestions(res.search_exercises.exercises);
+        const arr =  res.search_exercises.exercises.slice(0,5);
+        setSuggestions(arr);
 
         /*
 
@@ -162,6 +166,8 @@ export default function Schedule() {
 
     const addExercise = (exercise) => {
         setExercises([...exercises, exercise]);
+        setSuggestions([]);
+        seteForm({...eform, name: ''})
     }
 
     const removeExercise = (index) => {
@@ -183,10 +189,7 @@ export default function Schedule() {
                     </Link>
                 </div>
                 <div className='bg-dg-100 flex flex-col justify-center items-center'>
-                    <h1 className='text-2xl font-semibold'>Create Workout</h1>
-                    <input type='text' name='name' onChange={updateEForm} value={eform.name}
-                        className='px-2 py-1 bg-dg-100 border border-dg-200 rounded-md color-white outline-none' />
-                    <div className='mt-8'>
+                    <h1 className='text-2xl font-semibold'>Create Workout</h1> <div className='mt-8'>
                         <div className='flex flex-col mb-4'>
                             <span className='text-sm uppercase font-semibold'>
                                 Name
@@ -205,12 +208,35 @@ export default function Schedule() {
                 </div>
                 <div className='bg-dg-100 flex justify-center items-center px-8'>
                     <div className='w-full'>
-                        <div className='flex items-center'>
-                            <h1 className='text-xl font-medium'>Exercises</h1>
-                            <button className='flex items-center gap-2 ml-auto px-2 bg-primary-h --bg hover:bg-primary-h2 text-sm uppercase font-semibold rounded-md'>
-                                <IoAddCircle />
-                                Add Exercise
-                            </button>
+                        <div className=''>
+                            <div>
+                                <h1 className='text-xl font-medium'>Exercises</h1>
+                            </div>
+
+                            <div className='flex items-center gap-2 mb-2 relative'>
+                                <input type='text' name='name' onChange={updateEForm} value={eform.name}
+                                    className={`px-2 py-1 bg-dg-100 border border-dg-200 rounded-md color-white outline-none ${suggestions.length && 'w-full'}`}
+                                    placeholder='Enter exercise name...' />
+                            
+                                <button className={`a-mw ${!suggestions.length ? 'max-w-[100px] px-2 py-1' : 'hide-btn p-0'} flex items-center gap-2  bg-primary-h --bg hover:bg-primary-h2 text-sm uppercase font-semibold rounded-md`}
+                                >
+                                    <span className={`items-center gap-1 ${!suggestions.length ? 'flex' : 'hidden'}`}>
+                                        <IoAddCircle />
+                                        Add
+                                    </span>
+                                </button>
+
+                                <div className='absolute top-full w-full'>
+                                    {suggestions.map(e => {
+                                        return (
+                                            <div key={e.exerciseId} className='px-2 py-1 bg-dg-200 w-full hover:cursor-pointer --bg hover:bg-dg-300'
+                                            onClick={()=>{addExercise(e)}}>
+                                                {e.name}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         </div>
                         <div className='border border-dg-200 rounded-md px-4 py-2 w-full flex'>
                             {exercises===undefined || (typeof exercises ==='object' && exercises.length===0)?(
