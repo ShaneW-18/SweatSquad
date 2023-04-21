@@ -188,3 +188,6 @@ export async function add_exercise_to_workout( exerciseId, workoutId, reps, sets
   }
   return responce;
 }
+export async function edit_schedule(){
+  
+}
