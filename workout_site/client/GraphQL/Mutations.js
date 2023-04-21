@@ -35,3 +35,18 @@ export const REGISTER = gql`
     }
   }
 `;
+
+export const ADD_EXERCISE = gql`
+  mutation Mutation($name: String!) {
+    add_exercise(name: $name) {
+      code
+      exercise {
+        description
+        name
+        exerciseId
+      }
+      message
+      success
+    }
+  }
+`;

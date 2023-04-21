@@ -8,13 +8,16 @@ module.exports = {
     colors: {
       'primary': '#37cd92',
       'primary-h':'#2ea978',
+      'primary-h2':'#168e5d',
       'dg-100': '#121212',
       'dg-200': '#222',
       'dg-300': '#343434',
       'dg-400': '#454545',
       'white':'#fff',
       'black':'#000',
-      'transparent':'rgba(0,0,0,0)'
+      'transparent':'rgba(0,0,0,0)',
+      'red':'#e64040',
+      'red-h': '#b83939',
     },
     extend: {
     },
@@ -28,7 +31,8 @@ module.exports = {
       '2': '1fr 1fr',
       '1': 'auto',
       '23': '2fr 1fr',
-      '3': '1fr 1fr 1fr'
+      '3': '1fr 1fr 1fr',
+      '4': '1fr 1fr 1fr 1fr',
     }
   },
   plugins: [],

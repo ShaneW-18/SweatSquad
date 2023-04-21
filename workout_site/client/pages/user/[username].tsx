@@ -42,7 +42,7 @@ export default function User({userData}: any){
                                     <span>Schedules</span>
                                     <AiOutlineCalendar className='ml-auto' />
                                 </div>
-                                {schedules === undefined ? (
+                                {schedules === undefined || (typeof schedules ==='object' && schedules.length===0) ? (
                                     <span className='text-white/60 font-medium'>No schedules!</span>
                                 ) : (
                                     <div className='flex flex-col gap-2 mt-2'>
@@ -59,7 +59,7 @@ export default function User({userData}: any){
                                     <span>Tracks</span>
                                     <AiOutlineOrderedList className='ml-auto' />
                                 </div>
-                                {tracks === undefined ? (
+                                {tracks === undefined || (typeof tracks ==='object' && tracks.length===0) ? (
                                     <span className='text-white/60 font-medium'>No tracks!</span>
                                 ) : (
                                     <div className='flex flex-col gap-2 mt-2'>
@@ -76,7 +76,7 @@ export default function User({userData}: any){
                                     <span>Workouts</span>
                                     <GiWeightLiftingUp className='ml-auto' />
                                 </div>
-                                {workouts === undefined ? (
+                                {workouts === undefined || (typeof workouts ==='object' && workouts.length===0) ? (
                                     <span className='text-white/60 font-medium'>No workouts!</span>
                                 ) : (
                                     <div className='flex flex-col gap-2 mt-2'>

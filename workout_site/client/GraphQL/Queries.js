@@ -20,3 +20,18 @@ query Query($username: String!) {
 }
 `;
 
+export const SEARCH_EXERCISES = gql`
+query Query($name: String!) {
+  search_exercises(name: $name) {
+    code
+    success
+    message
+    exercises {
+      description
+      exerciseId
+      name
+    }
+  }
+}
+`;
+
