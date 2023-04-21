@@ -34,9 +34,27 @@ export type genericResponce = {
   success: Boolean;
   message: String;
 };
-export type getScheduleResponce = {
+export type getAllScheduleResponce = {
   code: Number;
   success: Boolean;
   message: String;
-  schedule: types.Schedule[]
+  schedules: types.Schedule[]
+}
+export type getAllTrackResponce = {
+  code: Number;
+  success: Boolean;
+  message: String;
+  tracks: types.Track[]
+}
+export type getAllWorkoutResponce = {
+  code: Number;
+  success: Boolean;
+  message: String;
+  workouts: types.Workout[]
+}
+export type getAllExerciseResponce = {
+  code: Number;
+  success: Boolean;
+  message: String;
+  exercises: types.Exercise[]
 }

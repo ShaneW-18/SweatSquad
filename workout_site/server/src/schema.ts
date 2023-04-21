@@ -92,11 +92,29 @@ export const typeDefs = `#graphql
     success: Boolean!
     message: String!
   }
-  type getAllScheduleResponce{
+  type get_All_Schedule_Responce{
     code: Int!
     success: Boolean!
     message: String!
-    schedule: [schedule]
+    schedules: [schedule]
+  }
+  type get_All_Tracks_Responce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    tracks: [track]
+  }
+  type get_All_Workouts_Responce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    workouts: [workout]
+  }
+  type get_all_exercises_responce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    exercises: [exercise]
   }
 
 
@@ -116,6 +134,7 @@ export const typeDefs = `#graphql
     add_track_to_schedule(scheduleId: String!, trackId: String!, start: String!, end: String): genericResponce!
     add_workout_to_track(workoutId: String!, trackId: String!, order: Int): genericResponce!
     add_exercise_to_workout(exerciseId: String!, workoutId: String!, reps: Int, sets: Int, time: String, order: Int!): genericResponce!
+
   }
   type Query{
     "all of user schedules"
@@ -124,6 +143,9 @@ export const typeDefs = `#graphql
     User(id: String!): userTypeResponce!
     Test: String!
     get_user_username(username: String!): userTypeResponce!
-    get_schedule_by_id(userId: String!): getAllScheduleResponce!
+    get_all_schedules_by_userId(userId: String!): get_All_Schedule_Responce!
+    get_all_tracks_by_userId(userId: String!): get_All_Tracks_Responce!
+    get_all_workouts_by_userId(userId: String!): get_All_Workouts_Responce!
+    get_all_exercises: get_all_exercises_responce!
   }
 `;
