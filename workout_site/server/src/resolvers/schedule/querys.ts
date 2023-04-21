@@ -128,4 +128,35 @@ export async function get_all_workouts_by_userId(userId: String): Promise<respon
     return responce;
 }
 
-  
+ export async function search_exercises(name: String): Promise<responces.getAllExerciseResponce> { 
+    let responce: responces.getAllExerciseResponce = {
+        code: 500,
+        success: false,
+        message: "sever error",
+        exercises: [],
+    };
+    try {
+        let exercises: types.ExerciseDB[] = await knexInstance(
+            "exercises"
+          ).whereRaw("LOWER(name) LIKE ?", [`%${name.toLowerCase()}%`]);
+        let exerciseList: types.Exercise[] = [];
+        for (let i = 0; i < exercises.length; i++) {
+            let exerciseItem: types.Exercise = {
+                name: exercises[i].name,
+                description: exercises[i].description,
+                exerciseId: exercises[i].exerciseId,
+            }
+            exerciseList.push(exerciseItem);
+        }
+
+        responce.code = 200;
+        responce.success = true;
+        responce.message = "exercise found";
+        responce.exercises = exerciseList;
+
+    }
+    catch (err) {
+        console.log(err);
+    }
+    return responce;
+ }

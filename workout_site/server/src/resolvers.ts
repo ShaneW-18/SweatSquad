@@ -36,7 +36,9 @@ export const resolvers = {
     get_all_exercises: async (parent, params, context, info) => {
       return await schedule_Querys.get_all_exercises();
     },
-
+    search_exercises: async (parent, { name }, context, info) => {
+      return await schedule_Querys.search_exercises(name);
+    }
     
   },
   Mutation: {
@@ -105,7 +107,20 @@ export const resolvers = {
     },
     add_exercise_to_workout: async (parent, { exerciseId, workoutId, reps, sets, time, order }, context, info) => {
       return await schedule_Mutations.add_exercise_to_workout(exerciseId, workoutId, reps, sets, time, order);
-    }
+    },
+    // edit_schedule: async (parent, { scheduleId, name, description, image }, context, info) => {
+    //   return await schedule_Mutations.edit_schedule(scheduleId, name, description, image);
+    // },
+    // edit_track: async (parent, { trackId, name, description }, context, info) => {
+    //   return await schedule_Mutations.edit_track(trackId, name, description);
+    // },
+    // edit_workout: async (parent, { workoutId, name, isRestDay, description }, context, info) => {
+    //   return await schedule_Mutations.edit_workout(workoutId, name, isRestDay, description);
+    // },
+    // edit_exercise: async (parent, { exerciseId, name, description }, context, info) => {
+    //   return await schedule_Mutations.edit_exercise(exerciseId, name, description);
+    // }
+
 
   },
 

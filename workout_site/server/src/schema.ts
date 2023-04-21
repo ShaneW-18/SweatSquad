@@ -118,6 +118,7 @@ export const typeDefs = `#graphql
   }
 
 
+
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
@@ -134,7 +135,10 @@ export const typeDefs = `#graphql
     add_track_to_schedule(scheduleId: String!, trackId: String!, start: String!, end: String): genericResponce!
     add_workout_to_track(workoutId: String!, trackId: String!, order: Int): genericResponce!
     add_exercise_to_workout(exerciseId: String!, workoutId: String!, reps: Int, sets: Int, time: String, order: Int!): genericResponce!
-
+    edit_schedule(scheduleId: String!, name: String, description: String, image: String): scheduleResponce!
+    edit_track(trackId: String!, name: String, description: String): trackResponce!
+    edit_workout(workoutId: String!, name: String, isRestDay: Boolean, description: String): workoutResponce!
+    edit_exercise(exerciseId: String!, name: String, description: String): exerciseResponce!
   }
   type Query{
     "all of user schedules"
@@ -147,5 +151,6 @@ export const typeDefs = `#graphql
     get_all_tracks_by_userId(userId: String!): get_All_Tracks_Responce!
     get_all_workouts_by_userId(userId: String!): get_All_Workouts_Responce!
     get_all_exercises: get_all_exercises_responce!
+    search_exercises(name: String!): get_all_exercises_responce!
   }
 `;
