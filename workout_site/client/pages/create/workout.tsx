@@ -213,18 +213,22 @@ export default function Schedule() {
                                 <h1 className='text-xl font-medium'>Exercises</h1>
                             </div>
 
-                            <div className='flex items-center gap-2 mb-2 relative'>
+                            <div className=' mb-2 relative'>
                                 <input type='text' name='name' onChange={updateEForm} value={eform.name}
                                     className={`px-2 py-1 bg-dg-100 border border-dg-200 rounded-md color-white outline-none ${suggestions.length && 'w-full'}`}
                                     placeholder='Enter exercise name...' />
-                            
-                                <button className={`a-mw ${!suggestions.length ? 'max-w-[100px] px-2 py-1' : 'hide-btn p-0'} flex items-center gap-2  bg-primary-h --bg hover:bg-primary-h2 text-sm uppercase font-semibold rounded-md`}
-                                >
-                                    <span className={`items-center gap-1 ${!suggestions.length ? 'flex' : 'hidden'}`}>
-                                        <IoAddCircle />
-                                        Add
-                                    </span>
-                                </button>
+                                
+                                <div className={`${suggestions.length ? 'hidden' : 'block'} flex items-center gap-2`}>
+                                    
+                                    <input type='text' />
+                                    <button className={`a-mw ${!suggestions.length ? 'max-w-[100px] px-2 py-1' : 'hide-btn p-0'} flex items-center gap-2  bg-primary-h --bg hover:bg-primary-h2 text-sm uppercase font-semibold rounded-md`}
+                                    >
+                                        <span className={`items-center gap-1 ${!suggestions.length ? 'flex' : 'hidden'}`}>
+                                            <IoAddCircle />
+                                            Add
+                                        </span>
+                                    </button>
+                                </div>
 
                                 <div className='absolute top-full w-full'>
                                     {suggestions.map(e => {
