@@ -226,7 +226,7 @@ export async function edit_schedule(name, description, image, scheduleId) {
   }
   return responce;
 }
-export async function edit_track (trackId, name, description) {
+export async function edit_track(trackId, name, description) {
   let responce: responces.trackResponce = {
     code: 500,
     success: false,
@@ -250,8 +250,8 @@ export async function edit_track (trackId, name, description) {
     responce.success = true;
     responce.message = "track edited";
     responce.track = await knexInstance("tracks")
-    .where("trackId", trackId)
-    .first();
+      .where("trackId", trackId)
+      .first();
   } catch (err) {
     console.log(err);
   }
@@ -283,7 +283,7 @@ export async function edit_workout(name, description, isRestDay, workoutId) {
     responce.workout = await knexInstance("workouts")
       .where("workoutId", workoutId)
       .first();
-      console.log(responce.workout);
+    console.log(responce.workout);
   } catch (err) {
     console.log(err);
   }
@@ -314,6 +314,100 @@ export async function edit_exercise(exerciseId, name, description) {
     responce.exercise = await knexInstance("exercises")
       .where("exerciseId", exerciseId)
       .first();
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function remove_track_from_schedule(trackId, scheduleId) {
+  let responce: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  };
+  try {
+    console.log(trackId, scheduleId);
+    await knexInstance("track_schedules")
+      .where("trackId", trackId)
+      .andWhere("scheduleId", scheduleId)
+      .del()
+      .then((numRowsDeleted) => {
+        if (numRowsDeleted === 0) {
+          responce = {
+            code: 400,
+            success: false,
+            message: "track not found in schedule",
+          };
+        } else {
+          responce = {
+            code: 200,
+            success: true,
+            message: "track removed from schedule",
+          };
+        }
+      });
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function remove_workout_from_track(workoutId, trackId) {
+  let responce: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  };
+  try {
+    await knexInstance("workout_tracks")
+      .where("workoutId", workoutId)
+      .andWhere("trackId", trackId)
+      .del()
+      .then((numRowsDeleted) => {
+        if (numRowsDeleted === 0) {
+          responce = {
+            code: 400,
+            success: false,
+            message: "workout not found in track",
+          };
+        } else {
+          responce = {
+            code: 200,
+            success: true,
+            message: "workout removed from track",
+          };
+        }
+      });
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function remove_exercise_from_workout(exerciseId, workoutId) {
+  let responce: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  };
+  try {
+    await knexInstance("exercise_workouts")
+      .where("exerciseId", exerciseId)
+      .andWhere("workoutId", workoutId)
+      .del()
+      .then((numRowsDeleted) => {
+        if (numRowsDeleted === 0) {
+          responce = {
+            code: 400,
+            success: false,
+            message: "exercise not found in workout",
+          };
+        } else {
+          responce = {
+            code: 200,
+            success: true,
+            message: "exercise removed from workout",
+          };
+        }
+      });
   } catch (err) {
     console.log(err);
   }

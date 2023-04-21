@@ -79,13 +79,13 @@ export type trackSceduleDB = {
   scheduleId: uuidv4;
   start: Date;
   end?: Date;
-}
+};
 export type workoutTrackDB = {
   workoutTrackId: uuidv4;
   workoutId: uuidv4;
   trackId: uuidv4;
   order: Number;
-}
+};
 export type exerciseWorkoutDB = {
   exerciseWorkoutId: uuidv4;
   workoutId: uuidv4;
@@ -94,4 +94,4 @@ export type exerciseWorkoutDB = {
   reps: Number;
   time: Number;
   order: Number;
-}
+};

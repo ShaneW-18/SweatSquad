@@ -139,7 +139,7 @@ export const resolvers = {
     },
     edit_schedule: async (
       parent,
-      {name, description, image, scheduleId},
+      { name, description, image, scheduleId },
       context,
       info
     ) => {
@@ -160,12 +160,15 @@ export const resolvers = {
     },
     edit_workout: async (
       parent,
-      {name, description, isRestDay, workoutId},
+      { name, description, isRestDay, workoutId },
       context,
       info
     ) => {
       return await schedule_Mutations.edit_workout(
-        name, description, isRestDay, workoutId
+        name,
+        description,
+        isRestDay,
+        workoutId
       );
     },
     edit_exercise: async (
@@ -178,6 +181,39 @@ export const resolvers = {
         exerciseId,
         name,
         description
+      );
+    },
+    remove_track_from_schedule: async (
+      parent,
+      { trackId, scheduleId },
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.remove_track_from_schedule(
+        trackId,
+        scheduleId
+      );
+    },
+    remove_workout_from_track: async (
+      parent,
+      { workoutId, trackId },
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.remove_workout_from_track(
+        workoutId,
+        trackId
+      );
+    },
+    remove_exercise_from_workout: async (
+      parent,
+      { exerciseId, workoutId },
+      context,
+      info
+    ) => {
+      return await schedule_Mutations.remove_exercise_from_workout(
+        exerciseId,
+        workoutId
       );
     },
   },
