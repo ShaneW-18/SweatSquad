@@ -60,8 +60,7 @@ export type Workout = {
   description?: String;
   isRestDay: Boolean;
   name: String;
-  days: Number;
-  User: User;
+  user: User;
   exercises?: [Exercise];
 };
 export type ExerciseDB = {
@@ -72,7 +71,7 @@ export type ExerciseDB = {
 export type Exercise = {
   name: String;
   description?: String;
-  exersiceId: String;
+  exerciseId: String;
 };
 export type trackSceduleDB = {
   trackScheduleId: uuidv4;

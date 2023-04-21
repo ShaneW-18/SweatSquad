@@ -23,9 +23,21 @@ export const resolvers = {
     get_user_username: async (parent, { username }, context, info) => {
       return await user_Querys.get_user_by_username(username);
     },
-    get_schedule_by_id: async (parent, { userId }, context, info) => {
+    get_all_schedules_by_userId: async (parent, { userId }, context, info) => {
       return await schedule_Querys.get_schedule_by_username(userId);
-    }
+
+    },
+    get_all_tracks_by_userId:async (parent,{userId}, context, info) => {
+      return  await schedule_Querys.get_all_tracks_by_userId(userId);
+    },
+    get_all_workouts_by_userId: async (parent, { userId }, context, info) => {
+      return await schedule_Querys.get_all_workouts_by_userId(userId);
+    },
+    get_all_exercises: async (parent, params, context, info) => {
+      return await schedule_Querys.get_all_exercises();
+    },
+
+    
   },
   Mutation: {
     //register user
@@ -125,12 +137,14 @@ export const resolvers = {
   },
   track: {
     user: async (parent) => {
+      console.log("track user");
       const user: types.User = await knexInstance("users")
         .where("userId", parent.userId)
         .first();
       return user;
     },
     workouts: async (parent) => {
+      console.log("track workouts");
       const workouts: types.Workout[] = await knexInstance("workouts as w")
         .join("workout_tracks as tw", "tw.workoutId", "w.workoutId")
         .select("w.* as workout")

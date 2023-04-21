@@ -42,7 +42,7 @@ export async function create_track(userId, name, description) {
     code: 500,
     success: false,
     message: "sever error",
-    track: null,
+    track: undefined,
   };
   const track: types.TrackDB = {
     trackId: uuidv4(),
