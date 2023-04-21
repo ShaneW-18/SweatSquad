@@ -139,6 +139,9 @@ export const typeDefs = `#graphql
     edit_track(trackId: String!, name: String, description: String): trackResponce!
     edit_workout(workoutId: String!, name: String, isRestDay: Boolean, description: String): workoutResponce!
     edit_exercise(exerciseId: String!, name: String, description: String): exerciseResponce!
+    remove_track_from_schedule(scheduleId: String!, trackId: String!): genericResponce!
+    remove_workout_from_track(workoutId: String!, trackId: String!): genericResponce!
+    remove_exercise_from_workout(exerciseId: String!, workoutId: String!): genericResponce!
   }
   type Query{
     "all of user schedules"

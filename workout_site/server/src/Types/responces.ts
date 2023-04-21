@@ -16,13 +16,13 @@ export type workoutResponce = {
   success: Boolean;
   message: String;
   workout: types.Workout;
-}
+};
 export type exerciseResponce = {
   code: Number;
   success: Boolean;
   message: String;
   exercise: types.Exercise;
-}
+};
 export type getUserResponce = {
   code: Number;
   success: Boolean;
@@ -38,23 +38,23 @@ export type getAllScheduleResponce = {
   code: Number;
   success: Boolean;
   message: String;
-  schedules: types.Schedule[]
-}
+  schedules: types.Schedule[];
+};
 export type getAllTrackResponce = {
   code: Number;
   success: Boolean;
   message: String;
-  tracks: types.Track[]
-}
+  tracks: types.Track[];
+};
 export type getAllWorkoutResponce = {
   code: Number;
   success: Boolean;
   message: String;
-  workouts: types.Workout[]
-}
+  workouts: types.Workout[];
+};
 export type getAllExerciseResponce = {
   code: Number;
   success: Boolean;
   message: String;
-  exercises: types.Exercise[]
-}
+  exercises: types.Exercise[];
+};
