@@ -11,11 +11,14 @@ export const GET_USER_BY_ID = gql`
 `;
 
 export const GET_USERDATA_BY_USERNAME = gql`
-query Query($username: String!) {
+query ExampleQuery($username: String!) {
   get_user_username(username: $username) {
-    description
-    email
-    userId
+    code
+    message
+    success
+    user {
+      userId
+    }
   }
 }
 `;
@@ -35,3 +38,47 @@ query Query($name: String!) {
 }
 `;
 
+export const GET_USER_WORKOUTS = gql`
+query Query($userId: String!) {
+  get_all_workouts_by_userId(userId: $userId) {
+    code
+    success
+    message
+    workouts {
+      name
+      description
+      workoutId
+    }
+  }
+}
+`;
+
+export const GET_USER_TRACKS = gql`
+query Query($userId: String!) {
+  get_all_tracks_by_userId(userId: $userId) {
+    code
+    success
+    message
+    tracks {
+      trackId
+      description
+      name
+    }
+  }
+}
+`;
+
+export const GET_USER_SCHEDULES = gql`
+query Query($userId: String!) {
+  get_all_schedules_by_userId(userId: $userId) {
+    code
+    success
+    message
+    schedules {
+      scheduleId
+      name
+      description
+    }
+  }
+}
+`;

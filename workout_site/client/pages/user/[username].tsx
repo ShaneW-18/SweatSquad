@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {GET_USERDATA_BY_USERNAME} from '../../GraphQL/Queries.js'
+import {GET_USERDATA_BY_USERNAME, GET_USER_SCHEDULES, GET_USER_TRACKS, GET_USER_WORKOUTS} from '../../GraphQL/Queries.js'
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import {useRouter } from 'next/router.js';
 import Content from "../../components/Content";
@@ -9,15 +9,15 @@ import { GiWeightLiftingUp } from 'react-icons/gi';
 import { AiOutlineOrderedList, AiOutlineCalendar } from 'react-icons/ai';
 import LinkBox from '../../components/LinkBox';
 
-export default function User({userData}: any){
+export default function User({userData, userErrorCode}: any){
     const router = useRouter();
     const { username } = router.query;
     const profileImage = userData.image ?? 'https://api.tecesports.com/images/general/user.png';
     const description = userData.description ?? 'GymSocial user';
 
-    const schedules = userData.schedules || s;
-    const tracks = userData.tracks || t;
-    const workouts = userData.workouts || w;
+    const schedules = userData.schedules;
+    const tracks = userData.tracks;
+    const workouts = userData.workouts;
 
     return (
         <Content>
@@ -98,10 +98,18 @@ export default function User({userData}: any){
     );
 }
 
+type UserData = {
+    username:String;
+    description:String;
+    schedules:any;
+    tracks:any;
+    workouts:any;
+}
+
 export async function getServerSideProps(context: any) {
     const { username } = context.query;
 
-    let userData = {};
+    let userData: any = {};
 
     const client = new ApolloClient({
         link: createHttpLink({
@@ -115,7 +123,36 @@ export async function getServerSideProps(context: any) {
             query: GET_USERDATA_BY_USERNAME,
             variables:{username: username}
         });
-        userData = data.get_user_username;
+        userData.data = data.get_user_username;
+
+        if (userData.data.code !== 200){
+            return {
+                props: {
+                    userData: [],
+                    userErrorCode: userData.data.code
+                }
+            };
+        }
+
+        const { userId } = userData.data.user;
+
+        const schedules = await client.query({
+            query: GET_USER_SCHEDULES,
+            variables:{userId:userId}
+        });
+        userData.schedules = schedules.data.get_all_schedules_by_userId.schedules;
+
+        const tracks = await client.query({
+            query: GET_USER_TRACKS,
+            variables:{userId:userId}
+        });
+        userData.tracks = tracks.data.get_all_tracks_by_userId.tracks;
+
+        const workouts = await client.query({
+            query: GET_USER_WORKOUTS,
+            variables:{userId:userId}
+        });
+        userData.workouts = workouts.data.get_all_workouts_by_userId.workouts;
     }
     catch(e){
         console.error(e);

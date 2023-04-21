@@ -50,3 +50,49 @@ export const ADD_EXERCISE = gql`
     }
   }
 `;
+
+export const ADD_WORKOUT = gql`
+mutation Mutation($name: String!, $isRestDay: Boolean!, $userId: String!, $description: String) {
+  add_workout(name: $name, isRestDay: $isRestDay, userId: $userId, description: $description) {
+    code
+    success
+    message
+    workout {
+      workoutId
+    }
+  }
+}
+`;
+
+export const ADD_TRACK = gql`
+mutation Mutation($name: String!, $userId: String!, $description: String) {
+  add_track(name: $name, userId: $userId, description: $description) {
+    code
+    success
+    message
+    track {
+      trackId
+    }
+  }
+}
+`;
+
+export const ADD_SCHEDULE = gql`
+mutation Mutation($name: String!, $userId: String!, $description: String) {
+  add_schedule(name: $name, userId: $userId, description: $description) {
+    code
+    message
+    schedule {
+      scheduleId
+    }
+    success
+  }
+}
+`;
+
+/*
+export const DELETE_TRACKS=gql``;
+
+export const DELETE_WORKOUTS=gql``;
+
+export const DELETE_EXERCISES=gql``;*/
