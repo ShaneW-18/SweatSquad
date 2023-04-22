@@ -289,7 +289,7 @@ export async function edit_workout(name, description, isRestDay, workoutId) {
   }
   return responce;
 }
-export async function edit_exercise(exerciseId, name, description) {
+export async function edit_exercise(exerciseId, name, description): Promise<responces.genericResponce> {
   let responce: responces.exerciseResponce = {
     code: 500,
     success: false,
@@ -319,17 +319,15 @@ export async function edit_exercise(exerciseId, name, description) {
   }
   return responce;
 }
-export async function remove_track_from_schedule(trackId, scheduleId) {
+export async function remove_track_from_schedule(id): Promise<responces.genericResponce> {
   let responce: responces.genericResponce = {
     code: 500,
     success: false,
     message: "sever error",
   };
   try {
-    console.log(trackId, scheduleId);
     await knexInstance("track_schedules")
-      .where("trackId", trackId)
-      .andWhere("scheduleId", scheduleId)
+      .where("trackScheduleId", id)
       .del()
       .then((numRowsDeleted) => {
         if (numRowsDeleted === 0) {
@@ -351,7 +349,7 @@ export async function remove_track_from_schedule(trackId, scheduleId) {
   }
   return responce;
 }
-export async function remove_workout_from_track(workoutId, trackId) {
+export async function remove_workout_from_track(id): Promise<responces.genericResponce> {
   let responce: responces.genericResponce = {
     code: 500,
     success: false,
@@ -359,8 +357,7 @@ export async function remove_workout_from_track(workoutId, trackId) {
   };
   try {
     await knexInstance("workout_tracks")
-      .where("workoutId", workoutId)
-      .andWhere("trackId", trackId)
+      .where("workoutTrackId", id)
       .del()
       .then((numRowsDeleted) => {
         if (numRowsDeleted === 0) {
@@ -382,7 +379,7 @@ export async function remove_workout_from_track(workoutId, trackId) {
   }
   return responce;
 }
-export async function remove_exercise_from_workout(exerciseId, workoutId) {
+export async function remove_exercise_from_workout(id): Promise<responces.genericResponce> {
   let responce: responces.genericResponce = {
     code: 500,
     success: false,
@@ -390,8 +387,7 @@ export async function remove_exercise_from_workout(exerciseId, workoutId) {
   };
   try {
     await knexInstance("exercise_workouts")
-      .where("exerciseId", exerciseId)
-      .andWhere("workoutId", workoutId)
+      .where("exerciseWorkoutId", id)
       .del()
       .then((numRowsDeleted) => {
         if (numRowsDeleted === 0) {
@@ -408,6 +404,150 @@ export async function remove_exercise_from_workout(exerciseId, workoutId) {
           };
         }
       });
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function remove_all_tracks_from_schedule(id): Promise<responces.genericResponce> {
+  let responce: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  };
+  try {
+    await knexInstance("track_schedules")
+      .where("scheduleId", id)
+      .del()
+      .then((numRowsDeleted) => {
+        if (numRowsDeleted === 0) {
+          responce = {
+            code: 400,
+            success: false,
+            message: "no tracks found in schedule",
+          };
+        } else {
+          responce = {
+            code: 200,
+            success: true,
+            message: "all tracks removed from schedule",
+          };
+        }
+      });
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function remove_all_workouts_from_track(id): Promise<responces.genericResponce> {
+  let responce: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  };
+  try {
+    await knexInstance("workout_tracks")
+      .where("trackId", id)
+      .del()
+      .then((numRowsDeleted) => {
+        if (numRowsDeleted === 0) {
+          responce = {
+            code: 400,
+            success: false,
+            message: "no workouts found in track",
+          };
+        } else {
+          responce = {
+            code: 200,
+            success: true,
+            message: "all workouts removed from track",
+          };
+        }
+      });
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function remove_all_exercises_from_workout(id): Promise<responces.genericResponce> {
+  let responce: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  };
+  try {
+    await knexInstance("exercise_workouts")
+      .where("workoutId", id)
+      .del()
+      .then((numRowsDeleted) => {
+        if (numRowsDeleted === 0) {
+          responce = {
+            code: 400,
+            success: false,
+            message: "no exercises found in workout",
+          };
+        } else {
+          responce = {
+            code: 200,
+            success: true,
+            message: "all exercises removed from workout",
+          };
+        }
+      });
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function delete_track(id): Promise<responces.genericResponce> {
+
+  let responce: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  };
+  try {
+    await knexInstance("track_schedules")
+      .where("trackId", id)
+      .del()
+    await knexInstance("workout_tracks")
+      .where("trackId", id)
+      .del()
+    await knexInstance("tracks")
+      .where("trackId", id)
+      .del()
+    responce = {
+      code: 200,
+      success: true,
+      message: "track deleted",
+    };
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function delete_workout(id): Promise<responces.genericResponce> {
+  let responce: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  };
+  try {
+    await knexInstance("exercise_workouts")
+      .where("workoutId", id)
+      .del()
+    await knexInstance("workout_tracks")
+      .where("workoutId", id)
+      .del()
+    await knexInstance("workouts")
+      .where("workoutId", id)
+      .del()
+    
+    responce = {
+      code: 200,
+      success: true,
+      message: "workout deleted",
+    };
   } catch (err) {
     console.log(err);
   }

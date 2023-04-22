@@ -38,6 +38,12 @@ export const resolvers = {
     search_exercises: async (parent, { name }, context, info) => {
       return await schedule_Querys.search_exercises(name);
     },
+    get_track_by_id: async (parent, { trackId }, context, info) => {
+      return await schedule_Querys.get_track_by_id(trackId);
+    },
+    get_workout_by_id: async (parent, { workoutId }, context, info) => {
+      return await schedule_Querys.get_workout_by_id(workoutId);
+    }
   },
   Mutation: {
     //register user
@@ -183,38 +189,29 @@ export const resolvers = {
         description
       );
     },
-    remove_track_from_schedule: async (
-      parent,
-      { trackId, scheduleId },
-      context,
-      info
-    ) => {
-      return await schedule_Mutations.remove_track_from_schedule(
-        trackId,
-        scheduleId
-      );
+    remove_track_from_schedule: async (parent, { trackScheduleId }, context, info) => {
+      return await schedule_Mutations.remove_track_from_schedule(trackScheduleId);
     },
-    remove_workout_from_track: async (
-      parent,
-      { workoutId, trackId },
-      context,
-      info
-    ) => {
-      return await schedule_Mutations.remove_workout_from_track(
-        workoutId,
-        trackId
-      );
+    remove_workout_from_track: async (parent, { workoutTrackId }, context, info) => {
+      return await schedule_Mutations.remove_workout_from_track(workoutTrackId);
     },
-    remove_exercise_from_workout: async (
-      parent,
-      { exerciseId, workoutId },
-      context,
-      info
-    ) => {
-      return await schedule_Mutations.remove_exercise_from_workout(
-        exerciseId,
-        workoutId
-      );
+    remove_exercise_from_workout: async (parent, { exerciseWorkoutId }, context, info) => {
+      return await schedule_Mutations.remove_exercise_from_workout(exerciseWorkoutId);
+    },
+    remove_all_workouts_from_track: async (parent, { trackId }, context, info) => {
+      return await schedule_Mutations.remove_all_workouts_from_track(trackId);
+    },
+    remove_all_tracks_from_schedule: async (parent, { scheduleId }, context, info) => {
+      return await schedule_Mutations.remove_all_tracks_from_schedule(scheduleId);
+    },
+    remove_all_exercises_from_workout: async (parent, { workoutId }, context, info) => {
+      return await schedule_Mutations.remove_all_exercises_from_workout(workoutId);
+    },
+    delete_track: async (parent, { trackId }, context, info) => {
+      return await schedule_Mutations.delete_track(trackId);
+    },
+    delete_workout: async (parent, { workoutId }, context, info) => {
+      return await schedule_Mutations.delete_workout(workoutId);
     },
   },
 
