@@ -9,26 +9,29 @@ import { IoAddCircle } from 'react-icons/io5';
 import Btn from '../../components/Btn';
 import Link from 'next/link';
 import { AiOutlineLeft } from 'react-icons/ai';
-import { SEARCH_EXERCISES } from '../../GraphQL/Queries';
-import { ADD_EXERCISE } from '../../GraphQL/Mutations';
+import { SEARCH_EXERCISES, GET_WORKOUT_BY_ID } from '../../GraphQL/Queries';
+import { ADD_EXERCISE, ADD_EXERCISE_TO_WORKOUT, DELETE_EXERCISES } from '../../GraphQL/Mutations';
 import { useLazyQuery, useMutation, gql } from '@apollo/client';
 import "react-toastify/dist/ReactToastify.css";
 import { errorToast, successToast } from "../../components/toasts";
 import { ToastContainer } from "react-toastify";
 import { useDrag, useDrop } from 'react-dnd';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 
 const MIN_QUERY_LEN = 2;
 
 
-export default function Workout() {
+export default function Workout({workoutData}) {
     const router = useRouter();
     const [gql_createExercise, {edata}] = useMutation(ADD_EXERCISE);
     const [searchExercise, {data}] = useLazyQuery(SEARCH_EXERCISES);
+    const [addExerciseToWorkout, {awdata}] = useMutation(ADD_EXERCISE_TO_WORKOUT);
+    const [deleteExercises, {dwdata}] = useMutation(DELETE_EXERCISES);
     const [edesc, setEDesc] = useState(false);
     const [suggestions, setSuggestions] = useState([]);
-    const [exercises, setExercises] = useState([]);
+    const [exercises, setExercises] = useState(workoutData.exercises);
     const { data: session, status } = useSession();
 
     function moveExercise(dragIndex, hoverIndex) {
@@ -106,19 +109,38 @@ export default function Workout() {
         }
 
         const { workoutId } = router.query;
-        const eVals = exercises.map(e => {
-            return {
-                exerciseId: e.exerciseId,
-                sets: e.sets,
-                reps: e.reps
-            };
-        })
 
         console.log(wform);
-        console.log(eVals);
 
-        /*TODO: delete all & add all */
-        //api
+        await deleteExercises({
+            variables: {
+                workoutId: workoutId
+            }
+        })
+        .then(({ data }) => {
+            return data;
+        });
+
+        exercises.forEach(async (e, index) => {
+            const sets=e.sets;
+            const reps=e.reps;
+            const id=e.exerciseId;
+
+            const res = await addExerciseToWorkout({
+                variables: {
+                    exerciseId: id,
+                    sets:parseInt(sets,10),
+                    reps:parseInt(reps,10),
+                    order:index,
+                    workoutId:workoutId
+                }
+            })
+            .then(({ data }) => {
+                return data;
+            });
+
+            successToast(`Workout has been updated!`);
+        });
     }
 
     const clearWorkout = () => {
@@ -346,4 +368,34 @@ function ExerciseListItem({index, name, desc, removeFunc, moveFunc, updateFunc, 
             </span>
         </div>
     );
+}
+
+export async function getServerSideProps(context){
+    const client = new ApolloClient({
+        link: createHttpLink({
+            uri: "https://workout-dev.swiles.tech",
+        }),
+        cache: new InMemoryCache(),
+    });
+
+    const { workoutId } = context.query;
+    let workoutData={};
+
+    try {
+        const workout = await client.query({
+            query: GET_WORKOUT_BY_ID,
+            variables:{workoutId:workoutId}
+        });
+        workoutData=workout.data.get_workout_by_id.workout;
+        console.log(workoutData.exercises);
+    }
+    catch(e){
+        console.error(e);
+    }
+
+    return {
+        props: {
+            workoutData: workoutData,
+        }
+    }
 }

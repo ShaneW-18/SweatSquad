@@ -9,8 +9,8 @@ import { IoAddCircle } from 'react-icons/io5';
 import Btn from '../../components/Btn';
 import Link from 'next/link';
 import { AiOutlineLeft } from 'react-icons/ai';
-import { GET_USER_WORKOUTS } from '../../GraphQL/Queries';
-import { ADD_EXERCISE } from '../../GraphQL/Mutations';
+import { GET_USER_WORKOUTS, GET_TRACK_BY_ID} from '../../GraphQL/Queries';
+import { ADD_WORKOUT_TO_TRACK, DELETE_WORKOUTS } from '../../GraphQL/Mutations';
 import { useLazyQuery, useMutation, gql } from '@apollo/client';
 import "react-toastify/dist/ReactToastify.css";
 import { errorToast, successToast } from "../../components/toasts";
@@ -23,16 +23,19 @@ import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { BsPlusCircleFill } from 'react-icons/bs/';
 
 export default function Track({trackData, myWorkouts}) {
-
-    const [workouts, setWorkouts] = useState([]);
+    const [addWorkoutToTrack, {data}] = useMutation(ADD_WORKOUT_TO_TRACK);
+    const [deleteWorkouts, {ddata}] = useMutation(DELETE_WORKOUTS);
+    const [workouts, setWorkouts] = useState(trackData.workouts);
+    const router = useRouter();
+    const { trackId } = router.query;
 
     const addRestDay = async() => {
-        workouts.push({
+        setWorkouts([...workouts, {
             workoutId:'781965be-cb55-416b-acb1-6dfdd797190c',
             name:'Rest Day',
             description: 'Day for resting',
             order:workouts.length+1
-        });
+        }]);
     }
 
     const pushWorkout = (index) => {
@@ -58,6 +61,33 @@ export default function Track({trackData, myWorkouts}) {
         }));
     }
 
+    const updateTrack = async() => {
+
+        await deleteWorkouts({
+            variables: {
+                trackId: trackId
+            }
+        })
+        .then(({ data }) => {
+            return data;
+        });
+
+        workouts.forEach(async (e, index) => {
+            const res = await addWorkoutToTrack({
+                variables: {
+                    workoutId: e.workoutId,
+                    trackId: trackId,
+                    order:index
+                }
+            })
+            .then(({ data }) => {
+                return data;
+            });
+        });
+
+        successToast(`${trackData.name} has been updated!`);
+    }
+
     return (
         <Auth>
             <ToastContainer />
@@ -73,19 +103,21 @@ export default function Track({trackData, myWorkouts}) {
                         <div className='w-full min-w-[400px]'>
                             <div className=''>
                                 <div className='mb-4'>
-                                    <h1 className='text-xl font-medium'>Track Name</h1>
-                                    <p className='text-white/70'>Track Description</p>
+                                    <h1 className='text-xl font-medium'>{trackData.name}</h1>
+                                    <p className='text-white/70'>{trackData.description}</p>
                                 </div>
                             </div>
-                            <div class='grid grid-cols-1 md:grid-cols-2 gap-2'>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                                 <div>
                                     <div className='flex items-center gap-2'>
                                         <h1>Track Workouts</h1>
-                                        <button className='flex items-center'>
+                                        <button className='flex gap-2 items-center ml-auto rounded-md bg-dg-300 --bg hover:bg-dg-400 px-2 py-1'
+                                            onClick={addRestDay}>
                                             <BsPlusCircleFill />
                                             Rest Day
                                         </button>
-                                        <button className='flex items-center'>
+                                        <button className='flex gap-2 items-center rounded-md bg-primary-h --bg hover:bg-primary-h2 px-2 py-1'
+                                            onClick={updateTrack}>
                                             <BiSave />
                                             Save
                                         </button>
@@ -225,6 +257,7 @@ export async function getServerSideProps(context){
 
     const { trackId } = context.query;
     let workouts = [];
+    let trackData={};
     const session = await getSession(context);
     const { userId } = session.user;
 
@@ -234,6 +267,13 @@ export async function getServerSideProps(context){
             variables:{userId:userId}
         });
         workouts = myWorkouts.data.get_all_workouts_by_userId.workouts;
+
+        const track = await client.query({
+            query:GET_TRACK_BY_ID,
+            variables:{trackId:trackId}
+        });
+
+        trackData = track.data.get_track_by_id.track;
     }
     catch(e){
         console.error(e);
@@ -241,7 +281,7 @@ export async function getServerSideProps(context){
 
     return {
         props: {
-            trackData: [],
+            trackData: trackData,
             myWorkouts: workouts
         }
     }

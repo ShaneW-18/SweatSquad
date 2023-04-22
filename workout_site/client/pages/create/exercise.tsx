@@ -50,7 +50,7 @@ export default function Exercise({ exerciseData }) {
             return data;
         });
 
-        if (!('add_exercise' in data)){
+        if (!('add_exercise' in res)){
             errorToast('Error creating workout');
             return;
         }

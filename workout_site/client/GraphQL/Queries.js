@@ -82,3 +82,46 @@ query Query($userId: String!) {
   }
 }
 `;
+
+export const GET_WORKOUT_BY_ID = gql`
+query Query($workoutId: String!) {
+  get_workout_by_id(workoutId: $workoutId) {
+    code
+    message
+    success
+    workout {
+      name
+      description
+      isRestDay
+      exercises {
+        exerciseId
+        description
+        name
+        sets
+        reps
+      }
+    }
+  }
+}
+`;
+
+export const GET_TRACK_BY_ID = gql`
+query Query($trackId: String!) {
+  get_track_by_id(trackId: $trackId) {
+    code
+    message
+    success
+    track {
+      description
+      name
+      trackId
+      workouts {
+        workoutId
+        name
+        description
+        isRestDay
+      }
+    }
+  }
+}
+`;

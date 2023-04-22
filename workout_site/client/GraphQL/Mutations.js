@@ -77,10 +77,42 @@ mutation Mutation($name: String!, $userId: String!, $description: String) {
 }
 `;
 
+export const ADD_WORKOUT_TO_TRACK = gql`
+mutation Mutation($workoutId: String!, $trackId: String!, $order: Int!) {
+  add_workout_to_track(workoutId: $workoutId, trackId: $trackId, order: $order) {
+    code
+    message
+    success
+  }
+}
+`;
 
-/*
-export const DELETE_TRACKS=gql``;
+export const DELETE_WORKOUTS=gql`
+mutation Mutation($trackId: String!) {
+  remove_all_workouts_from_track(trackId: $trackId) {
+    code
+    message
+    success
+  }
+}
+`;
 
-export const DELETE_WORKOUTS=gql``;
+export const ADD_EXERCISE_TO_WORKOUT=gql`
+mutation Mutation($exerciseId: String!, $workoutId: String!, $order: Int!, $reps: Int, $sets: Int) {
+  add_exercise_to_workout(exerciseId: $exerciseId, workoutId: $workoutId, order: $order, reps: $reps, sets: $sets) {
+    code
+    success
+    message
+  }
+}
+`;
 
-export const DELETE_EXERCISES=gql``;*/
+export const DELETE_EXERCISES=gql`
+mutation Mutation($workoutId: String!) {
+  remove_all_exercises_from_workout(workoutId: $workoutId) {
+    code
+    message
+    success
+  }
+}
+`;
