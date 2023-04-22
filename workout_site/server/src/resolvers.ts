@@ -213,6 +213,12 @@ export const resolvers = {
     delete_workout: async (parent, { workoutId }, context, info) => {
       return await schedule_Mutations.delete_workout(workoutId);
     },
+    follow_user: async (parent, { followingId, followedId }, context, info) => {
+      return await user_Mutations.follow_user(followingId, followedId);
+    },
+    unfollow_user: async (parent, { followingId, followedId }, context, info) => {
+      return await user_Mutations.unfollow_user(followingId, followedId);
+    }
   },
 
   User: {

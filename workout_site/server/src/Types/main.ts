@@ -95,3 +95,8 @@ export type exerciseWorkoutDB = {
   time: Number;
   order: Number;
 };
+export type follow = {
+  followingUserId: uuidv4;
+  followedUserId: uuidv4;
+  createdAt: Date;
+};
