@@ -10,15 +10,7 @@ export default function Create() {
         <Content>
             <div className='h-[100vh] flex items-center justify-center flex-col gap-8'>
                 <span className='text-2xl font-semibold'>Select an item to create</span>
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2'>
-                    <Link href="/create/schedule" className='flex flex-col gap-2 items-center border border-dg-400 rounded-md py-4 px-8 hover:bg-dg-200 --bg'>
-                        <div className='flex items-center justify-center'>
-                            <AiOutlineCalendar />
-                        </div>
-                        <div className='flex items-center justify-center font-medium'>
-                            <span>Schedule</span>
-                        </div>
-                    </Link>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-2'>
                     <Link href="/create/track" className='flex flex-col gap-2 items-center border border-dg-400 rounded-md py-4 px-8 hover:bg-dg-200 --bg'>
                         <div className='flex items-center justify-center'>
                             <AiOutlineOrderedList />

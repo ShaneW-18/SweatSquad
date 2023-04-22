@@ -163,5 +163,4 @@ export async function getServerSideProps(context: any) {
             userData: userData
         }
     }
-
 }

@@ -77,18 +77,6 @@ mutation Mutation($name: String!, $userId: String!, $description: String) {
 }
 `;
 
-export const ADD_SCHEDULE = gql`
-mutation Mutation($name: String!, $userId: String!, $description: String) {
-  add_schedule(name: $name, userId: $userId, description: $description) {
-    code
-    message
-    schedule {
-      scheduleId
-    }
-    success
-  }
-}
-`;
 
 /*
 export const DELETE_TRACKS=gql``;

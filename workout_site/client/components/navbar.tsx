@@ -34,11 +34,6 @@ const Navbar = () => {
             <BiLayerPlus /> <span className="hidden md:inline-block">Create</span>
           </div>
         </Link>
-        <Link href="/schedules">
-          <div className={`px-4 py-3 md:py-2 hover:bg-primary-h flex items-center --bg font-medium gap-4 rounded-md ${page === 'schedules' && 'bg-primary-h'}`}>
-            <FaCalendarAlt/> <span className="hidden md:inline-block">My Schedules</span>
-          </div>
-        </Link>
         <Link href="/messages">
           <div className={`px-4 py-3 md:py-2 hover:bg-primary-h flex items-center --bg font-medium gap-4 rounded-md ${page === 'messages' && 'bg-primary-h'}`}>
             <FaComments /> <span className="hidden md:inline-block">Messages</span>
