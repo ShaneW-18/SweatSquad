@@ -147,7 +147,8 @@ export const typeDefs = `#graphql
     remove_all_exercises_from_workout(workoutId: String!): genericResponce!
     delete_track(trackId: String!): genericResponce!
     delete_workout(workoutId: String!): genericResponce!
-
+    follow_user(followingId: String!, followedId: String!): genericResponce!
+    unfollow_user(followingId: String!, followedId: String!): genericResponce!
     
   }
   type Query{

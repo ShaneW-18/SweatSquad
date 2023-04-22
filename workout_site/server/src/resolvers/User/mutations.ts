@@ -60,7 +60,6 @@ export async function register_user(
 }
 
 export async function login(email: String, password: String) {
-  console.log("login");
 
   const user = await knexInstance("users").where("email", email).first();
 
@@ -81,5 +80,46 @@ export async function login(email: String, password: String) {
     response.message = "User not found";
   }
 
+  return response;
+}
+export async function follow_user(followingId, followedId): Promise<responces.genericResponce>{
+  let response: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  }
+
+  const follow: types.follow = {
+    followingUserId: followingId,
+    followedUserId: followedId,
+    createdAt: new Date()
+  }
+  try {
+    await knexInstance("follows").insert(follow);
+    response.code = 200;
+    response.success = true;
+    response.message = "followed";
+  }
+  catch {
+    return response;
+  }
+  return response;
+}
+export async function unfollow_user(followingId, followedId): Promise<responces.genericResponce>{
+  let response: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  }
+
+  try {
+    await knexInstance("follows").where("followingUserId", followingId).andWhere("followedUserId", followedId).del();
+    response.code = 200;
+    response.success = true;
+    response.message = "unfollowed";
+  }
+  catch {
+    return response;
+  }
   return response;
 }
