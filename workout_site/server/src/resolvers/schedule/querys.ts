@@ -168,3 +168,58 @@ export async function search_exercises(
   }
   return responce;
 }
+export async function get_track_by_id(id): Promise<responces.trackResponce> {
+  let responce: responces.trackResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+    track: null,
+  };
+  try {
+    let track: types.TrackDB = await knexInstance("tracks")
+      .where("trackId", id)
+      .first();
+    let trackItem: types.Track = {
+      name: track.name,
+      trackId: track.trackId,
+      user: null,
+      description: track.description,
+    };
+
+    responce.code = 200;
+    responce.success = true;
+    responce.message = "track found";
+    responce.track = trackItem;
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}
+export async function get_workout_by_id(id): Promise<responces.workoutResponce> {
+  let responce: responces.workoutResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+    workout: null,
+  };
+  try {
+    let workout: types.WorkoutDB = await knexInstance("workouts")
+      .where("workoutId", id)
+      .first();
+    let workoutItem: types.Workout = {
+      name: workout.name,
+      workoutId: workout.workoutId,
+      user: null,
+      description: workout.description,
+      isRestDay: workout.isRestDay,
+    };
+
+    responce.code = 200;
+    responce.success = true;
+    responce.message = "workout found";
+    responce.workout = workoutItem;
+  } catch (err) {
+    console.log(err);
+  }
+  return responce;
+}

@@ -133,15 +133,22 @@ export const typeDefs = `#graphql
     add_workout(name: String!, isRestDay: Boolean!, description: String, userId: String!): workoutResponce!
     add_exercise(name: String!, description: String): exerciseResponce!
     add_track_to_schedule(scheduleId: String!, trackId: String!, start: String!, end: String): genericResponce!
-    add_workout_to_track(workoutId: String!, trackId: String!, order: Int): genericResponce!
+    add_workout_to_track(workoutId: String!, trackId: String!, order: Int!): genericResponce!
     add_exercise_to_workout(exerciseId: String!, workoutId: String!, reps: Int, sets: Int, time: String, order: Int!): genericResponce!
     edit_schedule(scheduleId: String!, name: String, description: String, image: String): scheduleResponce!
     edit_track(trackId: String!, name: String, description: String): trackResponce!
     edit_workout(workoutId: String!, name: String, isRestDay: Boolean, description: String): workoutResponce!
     edit_exercise(exerciseId: String!, name: String, description: String): exerciseResponce!
-    remove_track_from_schedule(scheduleId: String!, trackId: String!): genericResponce!
-    remove_workout_from_track(workoutId: String!, trackId: String!): genericResponce!
-    remove_exercise_from_workout(exerciseId: String!, workoutId: String!): genericResponce!
+    remove_track_from_schedule(trackScheduleId: String!): genericResponce!
+    remove_workout_from_track(workoutTrackId: String!): genericResponce!
+    remove_exercise_from_workout(exerciseWorkoutId: String!): genericResponce!
+    remove_all_workouts_from_track(trackId: String!): genericResponce!
+    remove_all_tracks_from_schedule(scheduleId: String!): genericResponce!
+    remove_all_exercises_from_workout(workoutId: String!): genericResponce!
+    delete_track(trackId: String!): genericResponce!
+    delete_workout(workoutId: String!): genericResponce!
+
+    
   }
   type Query{
     "all of user schedules"
@@ -155,5 +162,7 @@ export const typeDefs = `#graphql
     get_all_workouts_by_userId(userId: String!): get_All_Workouts_Responce!
     get_all_exercises: get_all_exercises_responce!
     search_exercises(name: String!): get_all_exercises_responce!
+    get_track_by_id(trackId: String!): trackResponce!
+    get_workout_by_id(workoutId: String!): workoutResponce!
   }
 `;
