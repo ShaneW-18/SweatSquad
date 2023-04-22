@@ -252,14 +252,12 @@ export const resolvers = {
   },
   track: {
     user: async (parent) => {
-      console.log("track user");
       const user: types.User = await knexInstance("users")
         .where("userId", parent.userId)
         .first();
       return user;
     },
     workouts: async (parent) => {
-      console.log("track workouts");
       const workouts: types.Workout[] = await knexInstance("workouts as w")
         .join("workout_tracks as tw", "tw.workoutId", "w.workoutId")
         .select("w.* as workout")
@@ -279,6 +277,22 @@ export const resolvers = {
         .join("exercise_workouts as we", "we.exerciseId", "e.exerciseId")
         .select("e.* as exercise")
         .where("we.workoutId", parent.workoutId);
+        for (let i = 0; i < exercises.length; i++) {
+          let result = await knexInstance("exercise_workouts as ew")
+            .select("ew.sets")
+            .where("ew.exerciseId", exercises[i].exerciseId)
+            .where("ew.workoutId", parent.workoutId)
+            .first()
+            const sets = Number(result.sets) ;
+            exercises[i].sets = sets; 
+          result = await knexInstance("exercise_workouts as ew")
+            .select("ew.reps")
+            .where("ew.exerciseId", exercises[i].exerciseId)
+            .where("ew.workoutId", parent.workoutId)
+            .first()
+            const reps = Number(result.reps) ;
+            exercises[i].reps = reps;
+        }
       return exercises;
     },
   },
