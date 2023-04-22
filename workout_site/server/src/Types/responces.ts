@@ -58,3 +58,9 @@ export type getAllExerciseResponce = {
   message: String;
   exercises: types.Exercise[];
 };
+export type getAllUserResponce = {
+  code: Number;
+  success: Boolean;
+  message: String;
+  users: types.User[];
+};
