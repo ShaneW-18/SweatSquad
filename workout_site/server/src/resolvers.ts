@@ -43,7 +43,11 @@ export const resolvers = {
     },
     get_workout_by_id: async (parent, { workoutId }, context, info) => {
       return await schedule_Querys.get_workout_by_id(workoutId);
-    }
+    },
+    search_all_users: async (parent, { username }, context, info) => {
+      return await user_Querys.search_all_users(username);
+    },
+
   },
   Mutation: {
     //register user

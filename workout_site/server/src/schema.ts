@@ -116,6 +116,12 @@ export const typeDefs = `#graphql
     message: String!
     exercises: [exercise]
   }
+  type get_all_users_responce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    users: [User]
+  }
 
 
 
@@ -165,5 +171,6 @@ export const typeDefs = `#graphql
     search_exercises(name: String!): get_all_exercises_responce!
     get_track_by_id(trackId: String!): trackResponce!
     get_workout_by_id(workoutId: String!): workoutResponce!
+    search_all_users(username: String!): get_all_users_responce!
   }
 `;

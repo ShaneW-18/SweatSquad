@@ -44,3 +44,41 @@ export async function get_user_by_username(
   }
   return responce;
 }
+export async function search_all_users(
+  username: String
+): Promise<responces.getAllUserResponce> {
+  let responce: responces.getAllUserResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+    users: [],
+  };
+  const users: types.UserDB[] = await knexInstance("users").whereRaw(
+    "Lower(username) LIKE ?",
+    [`%${username.toLowerCase()}%`]
+  );
+  let userList: types.User[] = [];
+  try {
+    for (let i = 0; i < users.length; i++) {
+      let userItem: types.User = {
+        username: users[i].username,
+        userId: users[i].userId,
+        description: users[i].description,
+        image: users[i].image,
+        password: users[i].password,
+        email: users[i].email,
+      };
+      userList.push(userItem);
+    }
+    responce.code = 200;
+    responce.success = true;
+    responce.message = "User found";
+    responce.users = userList;
+    return responce;
+
+  } catch (err) {
+    console.log(err);
+  }
+
+  return responce;
+}
