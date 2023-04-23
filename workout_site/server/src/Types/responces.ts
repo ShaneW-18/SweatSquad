@@ -64,3 +64,10 @@ export type getAllUserResponce = {
   message: String;
   users: types.User[];
 };
+export type get_all_users_follow_responce = {
+  code: Number;
+  success: Boolean;
+  message: String;
+  users: types.User[];
+  count: Number;
+}
