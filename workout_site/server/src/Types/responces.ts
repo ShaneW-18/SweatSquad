@@ -71,3 +71,15 @@ export type get_all_users_follow_responce = {
   users: types.User[];
   count: Number;
 }
+export type conversationResponce = {
+  code: Number;
+  success: Boolean
+  message: String
+  conversation: types.conversation
+}
+export type messageResponce = {
+  code: Number;
+  success: Boolean
+  messageInfo: String
+  message: types.message
+}
