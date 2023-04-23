@@ -319,6 +319,7 @@ export const resolvers = {
         .join("exercise_workouts as we", "we.exerciseId", "e.exerciseId")
         .select("e.* as exercise")
         .where("we.workoutId", parent.workoutId);
+        console.log(parent);
         for (let i = 0; i < exercises.length; i++) {
           let result = await knexInstance("exercise_workouts as ew")
             .select("ew.sets")
@@ -332,9 +333,19 @@ export const resolvers = {
             .where("ew.exerciseId", exercises[i].exerciseId)
             .where("ew.workoutId", parent.workoutId)
             .first()
-            const reps = Number(result.reps) ;
+            const reps = Number(result.reps);
             exercises[i].reps = reps;
+          //get order
+          result = await knexInstance("exercise_workouts as ew")
+            .select("ew.order")
+            .where("ew.exerciseId", exercises[i].exerciseId)
+            .where("ew.workoutId", parent.workoutId)
+            .first()
+            const order = Number(result.order);
+            exercises[i].order = order;
         }
+        //order list 
+        exercises.sort((a, b) => (a.order > b.order) ? 1 : -1)
       return exercises;
     },
   },

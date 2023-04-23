@@ -82,6 +82,7 @@ export const typeDefs = `#graphql
     exerciseId: String!
     sets: Int
     reps: Int
+    order: Int
   }
   type track{
     name: String!
