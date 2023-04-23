@@ -55,6 +55,7 @@ export async  function create_message(conversationId, userId, message): Promise<
     try {
         await knexInstance("messages").insert(messageDB)
         const Rmessage: types.message = await knexInstance("messages").where("messageId", messageDB.messageId).first()
+        await knexInstance("conversations").where("conversationId", conversationId).update({ modified: new Date() })
         responce.code = 200
         responce.success = true
         responce.messageInfo = "Message Created"
@@ -84,6 +85,25 @@ export async function edit_conversation(conversationId, name, userId): Promise<r
         responce.success = true
         responce.message = "Conversation Edited"
         responce.conversation = Rconversation
+    }
+    catch (err) {
+        console.log(err)
+    }
+    return responce;
+}
+
+export async function delete_conversation(conversationId): Promise<responces.conversationResponce> {
+    const responce: responces.conversationResponce = {
+        code: 500,
+        success: false,
+        message: "Internal Server Error",
+        conversation: null
+    }
+    try {
+        await knexInstance("conversations").where("conversationId", conversationId).del()
+        responce.code = 200
+        responce.success = true
+        responce.message = "Conversation Deleted"
     }
     catch (err) {
         console.log(err)

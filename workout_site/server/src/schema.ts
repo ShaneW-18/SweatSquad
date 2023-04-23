@@ -17,6 +17,7 @@ export const typeDefs = `#graphql
     "profile image of user"
     image: String
     activeTracks: [track]
+    conversations: [conversation]
   }
   "responce structure for login and register"
   type userTypeResponce{
@@ -159,6 +160,7 @@ export const typeDefs = `#graphql
     messageInfo: String!
     message: message
   }
+  
 
 
   # The "Query" type is special: it lists all of the available queries that

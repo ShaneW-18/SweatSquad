@@ -266,6 +266,14 @@ export const resolvers = {
         .select("t.* as activeTracks")
         .where("ut.userId", parent.userId);
       return activeTracks;
+    },
+    conversations: async (parent) => {  
+      const conversations: types.conversation[] = await knexInstance("conversations as c")
+      .join("user_Conversations as uc", "uc.conversationId", "c.conversationId")
+      .select("c.* as conversations")
+      .where("uc.userId", parent.userId)
+      .orderBy("c.modified", "desc");
+      return conversations;
     }
   },
   schedule: {
