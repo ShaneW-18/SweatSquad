@@ -124,7 +124,13 @@ export const typeDefs = `#graphql
     message: String!
     users: [User]
   }
-
+  type get_all_users_follow_responce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    users: [User]
+    count: Int!
+  }
 
 
   # The "Query" type is special: it lists all of the available queries that
@@ -174,5 +180,7 @@ export const typeDefs = `#graphql
     get_track_by_id(trackId: String!): trackResponce!
     get_workout_by_id(workoutId: String!): workoutResponce!
     search_all_users(username: String!): get_all_users_responce!
+    get_all_users_following(userId: String!): get_all_users_follow_responce!
+    get_all_users_followers(userId: String!): get_all_users_follow_responce!
   }
 `;

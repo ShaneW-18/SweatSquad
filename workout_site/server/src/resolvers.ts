@@ -47,6 +47,12 @@ export const resolvers = {
     search_all_users: async (parent, { username }, context, info) => {
       return await user_Querys.search_all_users(username);
     },
+    get_all_users_following:async (parent, {userId}, context, info) => {
+      return await user_Querys.get_all_users_following(userId);
+    },
+    get_all_users_followers:async (parent, {userId}, context, info) => {
+      return await user_Querys.get_all_users_followers(userId);
+    },
 
   },
   Mutation: {
@@ -296,4 +302,5 @@ export const resolvers = {
       return exercises;
     },
   },
+
 };
