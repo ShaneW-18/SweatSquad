@@ -108,3 +108,37 @@ export type activeTrackDB = {
   trackId: uuidv4;
   userId: uuidv4;
 }
+export type conversation = {
+  conversationId: String
+  name: String
+  created: String
+  modified: String
+  messages: [message]
+  users: [User]
+  offset?: Number
+}
+export type message = {
+  messageId: String
+  message: String
+  sender: User
+  conversation: conversation
+  timeSent: String
+}
+export type messageDB = {
+  messageId: String
+  userIdFrom: String
+  conversationId: String
+  message: String
+  timeSent: Date
+}
+export type conversationDB = {
+  conversationId: String
+  name: String
+  created: Date
+  modified: Date
+}
+export type conversationUserDB = {
+  userId: String
+  conversationId: String
+  dateJoined: Date
+}

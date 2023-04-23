@@ -132,7 +132,33 @@ export const typeDefs = `#graphql
     users: [User]
     count: Int!
   }
-
+  type conversation{
+    conversationId: String!
+    name: String!
+    created: String!
+    modified: String!
+    messages: [message]
+    users: [User]
+  }
+  type message{
+    messageId: String!
+    message: String!
+    sender: User!
+    conversation: conversation!
+    timeSent: String!
+  }
+  type conversationResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    conversation: conversation
+  }
+  type messageResponce{
+    code: Int!
+    success: Boolean!
+    messageInfo: String!
+    message: message
+  }
 
 
   # The "Query" type is special: it lists all of the available queries that
@@ -167,6 +193,10 @@ export const typeDefs = `#graphql
     unfollow_user(followingId: String!, followedId: String!): genericResponce!
     add_active_track(userId: String!, trackId: String!): genericResponce!
     remove_active_track(userTrackId: String!): genericResponce!
+    create_conversation(userId: [String!]!, name: String!): conversationResponce!
+    create_message(conversationId: String!, message: String!, userId: String!): messageResponce!
+    edit_conversation(conversationId: String!, name: String, userId: String): conversationResponce!
+
   }
   type Query{
     "all of user schedules"
@@ -185,5 +215,6 @@ export const typeDefs = `#graphql
     search_all_users(username: String!): get_all_users_responce!
     get_all_users_following(userId: String!): get_all_users_follow_responce!
     get_all_users_followers(userId: String!): get_all_users_follow_responce!
+    get_conversation_by_id(conversationId: String!, offset: Int): conversationResponce!
   }
 `;
