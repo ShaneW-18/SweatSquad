@@ -10,6 +10,7 @@ import {
 } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { Router } from "next/router";
+
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     graphQLErrors.map(({ message, locations, path }) => {
@@ -19,9 +20,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     });
   }
 });
+
 const link = from([
   errorLink,
-  new HttpLink({ uri: "https://workout-dev.swiles.tech" }),
+  new HttpLink({ uri: "https://workout-dev.swiles.tech/" }),
 ]);
 
 const client = new ApolloClient({
@@ -61,7 +63,7 @@ export default function App({ Component, pageProps, session }: any) {
     <ApolloProvider client={client}>
       <SessionProvider session={session}>
         {loading && <Loading />}
-        <Component {...pageProps} />
+          <Component {...pageProps} />
       </SessionProvider>
     </ApolloProvider>
   );

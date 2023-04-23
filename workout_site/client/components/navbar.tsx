@@ -5,69 +5,59 @@ import {
   FaCalendarAlt,
   FaUserAlt,
   FaCog,
+  FaComments,
 } from "react-icons/fa";
+import { BiLayerPlus } from 'react-icons/bi';
 import { FiLogOut } from "react-icons/fi";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 
+import { useRouter } from 'next/router';
+
 const Navbar = () => {
-  type props = {
-    text: string;
-  };
-  const myProps: props = {
-    text: "Home",
-  };
+
+  const router = useRouter();
+  const page = router.route.substring(1).split('/')[0];
 
   return (
-    <div className="flex h-screen">
-      <div className="w-64 bg-gray-800 text-white bg-dg-200">
-        <div className="p-4">
-          <p className="text-[30px] font-bold">
-            Gym<span className="text-primary">Social</span>
-          </p>
+    <div className="w-[78px] md:w-64 bg-gray-800 text-white bg-dg-200 h-[100vh] py-0 md:py-4 relative">
+        <div className="text-[30px] font-bold items-center justify-center hidden md:flex">
+          Gym <span className="text-primary">Social</span>
         </div>
-        <div className="flex flex-col mt-6">
-          <Link href="/">
-            <div className="px-4 py-2 hover:bg-primary flex items-center --bg">
-              <FaHome className="mr-2" /> {myProps.text}
-            </div>
-          </Link>
-          <Link href="/explore">
-            <div className="px-4 py-2 hover:bg-primary flex items-center --bg">
-              <FaCompass className="mr-2" /> Explore
-            </div>
-          </Link>
-          <Link href="/schedules">
-            <div className="px-4 py-2 hover:bg-primary flex items-center --bg">
-              <FaCalendarAlt className="mr-2" /> My Schedules
-            </div>
-          </Link>
-          <Link href="/account">
-            <div className="px-4 py-2 hover:bg-primary flex items-center --bg">
-              <FaUserAlt className="mr-2" />
-              Account
-            </div>
-          </Link>
-          <Link href="/settings">
-            <div className="px-4 py-2 hover:bg-primary flex items-center --bg">
-              <FaCog className="mr-2" /> Settings
-            </div>
-          </Link>
-        </div>
-        <div className="flex mt-auto p-4">
-          <div className="hover:bg-primary flex items-center">
-            <FiLogOut
-              onClick={() => {
-                signOut({
-                  redirect: true,
-                  callbackUrl: "/login",
-                });
-              }}
-            />{" "}
+      <div className="flex flex-col mt-6 gap-3 md:gap-2 [&>*]:mx-4">
+        <Link href="/explore">
+          <div className={`px-4 py-3 md:py-2 hover:bg-primary-h flex items-center --bg font-medium gap-4 rounded-md ${page === 'explore' && 'bg-primary-h'}`}>
+            <FaCompass/> <span className="hidden md:inline-block">Explore</span>
           </div>
-        </div>
+        </Link>
+        <Link href="/create">
+          <div className={`px-4 py-3 md:py-2 hover:bg-primary-h flex items-center --bg font-medium gap-4 rounded-md ${page === 'create' && 'bg-primary-h'}`}>
+            <BiLayerPlus /> <span className="hidden md:inline-block">Create</span>
+          </div>
+        </Link>
+        <Link href="/messages">
+          <div className={`px-4 py-3 md:py-2 hover:bg-primary-h flex items-center --bg font-medium gap-4 rounded-md ${page === 'messages' && 'bg-primary-h'}`}>
+            <FaComments /> <span className="hidden md:inline-block">Messages</span>
+          </div>
+        </Link>
+        <Link href="/user">
+          <div className={`px-4 py-3 md:py-2 hover:bg-primary-h flex items-center --bg font-medium gap-4 rounded-md ${page === 'user' && 'bg-primary-h'}`}>
+            <FaUserAlt /> <span className="hidden md:inline-block">Profile</span>
+          </div>
+        </Link>
+        <Link href="/settings">
+          <div className={`px-4 py-3 md:py-2 hover:bg-primary-h flex items-center --bg font-medium gap-4 rounded-md ${page === 'settings' && 'bg-primary-h'}`}>
+            <FaCog /> <span className="hidden md:inline-block">Settings</span>
+          </div>
+        </Link>
       </div>
-      <div className="flex-1 bg-gray-100"></div>
+      <div className="px-4 py-4 absolute bottom-0 w-full">
+        <Link href="/logout" className="w-full">
+          <div className="px-4 py-3 md:py-2 hover:bg-primary-h flex items-center --bg font-medium gap-4 rounded-md w-full">
+            <FiLogOut /> <span className="hidden md:inline-block">Logout</span>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 };

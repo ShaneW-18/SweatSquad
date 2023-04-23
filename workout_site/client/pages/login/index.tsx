@@ -45,7 +45,7 @@ export default function Login() {
       errorToast("Invalid username or password");
       return;
     }
-    router.push("/dashboard");
+    router.push("/explore");
   }
 
   return (
