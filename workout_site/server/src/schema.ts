@@ -195,6 +195,8 @@ export const typeDefs = `#graphql
     remove_active_track(userTrackId: String!): genericResponce!
     create_conversation(userId: [String!]!, name: String!): conversationResponce!
     create_message(conversationId: String!, message: String!, userId: String!): messageResponce!
+    edit_conversation(conversationId: String!, name: String, userId: String): conversationResponce!
+
   }
   type Query{
     "all of user schedules"
@@ -213,6 +215,6 @@ export const typeDefs = `#graphql
     search_all_users(username: String!): get_all_users_responce!
     get_all_users_following(userId: String!): get_all_users_follow_responce!
     get_all_users_followers(userId: String!): get_all_users_follow_responce!
-
+    get_conversation_by_id(conversationId: String!, offset: Int): conversationResponce!
   }
 `;

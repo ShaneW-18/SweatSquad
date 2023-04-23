@@ -115,6 +115,7 @@ export type conversation = {
   modified: String
   messages: [message]
   users: [User]
+  offset?: Number
 }
 export type message = {
   messageId: String

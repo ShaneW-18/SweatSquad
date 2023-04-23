@@ -76,6 +76,7 @@ export type conversationResponce = {
   success: Boolean
   message: String
   conversation: types.conversation
+  offset?: Number
 }
 export type messageResponce = {
   code: Number;

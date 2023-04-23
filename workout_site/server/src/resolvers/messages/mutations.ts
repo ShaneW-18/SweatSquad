@@ -65,3 +65,28 @@ export async  function create_message(conversationId, userId, message): Promise<
     }
     return responce;
 }
+export async function edit_conversation(conversationId, name, userId): Promise<responces.conversationResponce> {
+    const responce: responces.conversationResponce = {
+        code: 500,
+        success: false,
+        message: "Internal Server Error",
+        conversation: null
+    }
+    try {
+        if (name) {
+            await knexInstance("conversations").where("conversationId", conversationId).update({ name: name })
+        }
+        if (userId) {
+            await knexInstance("user_Conversations").insert({ userId: userId, conversationId: conversationId, dateJoined: new Date() })
+        }
+        const Rconversation: types.conversation = await knexInstance("conversations").where("conversationId", conversationId).first()
+        responce.code = 200
+        responce.success = true
+        responce.message = "Conversation Edited"
+        responce.conversation = Rconversation
+    }
+    catch (err) {
+        console.log(err)
+    }
+    return responce;
+}

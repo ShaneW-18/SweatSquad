@@ -6,6 +6,7 @@ import * as schedule_Types from "./Types/main.js";
 import * as responces from "./Types/responces.js";
 import { knexInstance, User } from "./interfaces.js";
 import * as user_Querys from "./resolvers/User/querys.js";
+import * as message_Querys from "./resolvers/messages/querys.js";
 import * as user_Mutations from "./resolvers/User/mutations.js";
 import * as schedule_Querys from "./resolvers/schedule/querys.js";
 import * as message_Mutations from "./resolvers/messages/mutations.js";
@@ -54,6 +55,9 @@ export const resolvers = {
     get_all_users_followers:async (parent, {userId}, context, info) => {
       return await user_Querys.get_all_users_followers(userId);
     },
+    get_conversation_by_id:async (parent, {conversationId, offset}, context, info) => {
+      return await message_Querys.get_conversation_by_id(conversationId, offset);
+    }
 
   },
   Mutation: {
@@ -241,7 +245,10 @@ export const resolvers = {
     },
     create_message: async (parent, {conversationId, userId, message}, context, info) => {
       return await message_Mutations.create_message(conversationId, userId, message);
-    }
+    },
+    edit_conversation: async (parent, {conversationId, name, userId}, context, info) => {
+      return await message_Mutations.edit_conversation(conversationId, name, userId);
+    },
 
   },
 
@@ -332,10 +339,14 @@ export const resolvers = {
       return users;
     },
     messages: async (parent) => {
+      let offset = 0
+      if(parent.offset){
+        offset = parent.offset
+      }
       const messages: types.message[] = await knexInstance("messages as m")
         .select("m.* as message")
         .where("m.conversationId", parent.conversationId)
-        .offset(0)
+        .offset(offset)
         .limit(10);
       return messages;
     }
