@@ -75,6 +75,7 @@ export const typeDefs = `#graphql
     name: String!
     user: User!
     exercises: [exercise]
+    order: Int
   }
   type exercise{
     name: String!
