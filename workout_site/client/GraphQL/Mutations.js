@@ -116,3 +116,23 @@ mutation Mutation($workoutId: String!) {
   }
 }
 `;
+
+export const FOLLOW_USER = gql`
+mutation Mutation($followingId: String!, $followedId: String!) {
+  follow_user(followingId: $followingId, followedId: $followedId) {
+    success
+    message
+    code
+  }
+}
+`;
+
+export const UNFOLLOW_USER = gql`
+mutation Mutation($followingId: String!, $followedId: String!) {
+  unfollow_user(followingId: $followingId, followedId: $followedId) {
+    code
+    message
+    success
+  }
+}
+`;

@@ -125,3 +125,46 @@ query Query($trackId: String!) {
   }
 }
 `;
+
+export const GET_USER_ID = gql`
+query Query($username: String!) {
+  get_user_username(username: $username) {
+    user {
+      userId
+    }
+    success
+    message
+    code
+  }
+}
+`;
+
+export const GET_FOLLOWERS=gql`
+query Query($userId: String!) {
+  get_all_users_followers(userId: $userId) {
+    code
+    count
+    message
+    success
+    users {
+      userId
+      image
+      username
+    }
+  }
+}
+`;
+
+export const GET_FOLLOWING=gql`
+query Query($userId: String!) {
+  get_all_users_following(userId: $userId) {
+    count
+    code
+    users {
+      userId
+      username
+      image
+    }
+  }
+}
+`;
