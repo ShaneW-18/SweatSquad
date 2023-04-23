@@ -123,3 +123,46 @@ export async function unfollow_user(followingId, followedId): Promise<responces.
   }
   return response;
 }
+
+export async function add_active_track(userId, trackId): Promise<responces.genericResponce>{
+  let response: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  }
+  console.log(userId, trackId);
+  const activeTrack: types.activeTrackDB = {
+    userId: userId,
+    trackId: trackId,
+    userTrackId: uuidv4(),
+  }
+  try {
+    await knexInstance("user_tracks").insert(activeTrack);
+    response.code = 200;
+    response.success = true;
+    response.message = "added active track";
+  }
+  catch {
+    return response;
+  }
+  return response;
+}
+export async function remove_active_track(userTrackId): Promise<responces.genericResponce>{
+  let response: responces.genericResponce = {
+    code: 500,
+    success: false,
+    message: "sever error",
+  }
+
+  try {
+    await knexInstance("user_tracks").where("userTrackId", userTrackId).del();
+    response.code = 200;
+    response.success = true;
+    response.message = "removed active track";
+  }
+  catch {
+    return response;
+  }
+  return response;
+}
+

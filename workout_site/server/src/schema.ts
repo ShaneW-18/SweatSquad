@@ -16,6 +16,7 @@ export const typeDefs = `#graphql
     following: [User]
     "profile image of user"
     image: String
+    activeTracks: [track]
   }
   "responce structure for login and register"
   type userTypeResponce{
@@ -133,6 +134,7 @@ export const typeDefs = `#graphql
   }
 
 
+
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
@@ -163,7 +165,8 @@ export const typeDefs = `#graphql
     delete_workout(workoutId: String!): genericResponce!
     follow_user(followingId: String!, followedId: String!): genericResponce!
     unfollow_user(followingId: String!, followedId: String!): genericResponce!
-    
+    add_active_track(userId: String!, trackId: String!): genericResponce!
+    remove_active_track(userTrackId: String!): genericResponce!
   }
   type Query{
     "all of user schedules"

@@ -228,7 +228,13 @@ export const resolvers = {
     },
     unfollow_user: async (parent, { followingId, followedId }, context, info) => {
       return await user_Mutations.unfollow_user(followingId, followedId);
-    }
+    },
+    add_active_track: async (parent, {userId, trackId}, context, info) => {
+      return await user_Mutations.add_active_track(userId, trackId);
+    },
+    remove_active_track: async (parent, {userTrackId}, context, info) => {
+      return await user_Mutations.remove_active_track(userTrackId); 
+    },
   },
 
   User: {
@@ -239,6 +245,13 @@ export const resolvers = {
         .where("f.followingUserId", parent.userId);
       return following;
     },
+    activeTracks: async (parent) => {
+      const activeTracks: types.Track[] = await knexInstance("user_tracks as ut")
+        .join("tracks as t", "t.trackId", "ut.trackId")
+        .select("t.* as activeTracks")
+        .where("ut.userId", parent.userId);
+      return activeTracks;
+    }
   },
   schedule: {
     user: async (parent) => {
