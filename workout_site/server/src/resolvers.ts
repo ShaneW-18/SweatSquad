@@ -295,7 +295,8 @@ export const resolvers = {
       const workouts: types.Workout[] = await knexInstance("workouts as w")
         .join("workout_tracks as tw", "tw.workoutId", "w.workoutId")
         .select("w.* as workout")
-        .where("tw.trackId", parent.trackId);
+        .where("tw.trackId", parent.trackId)
+        .orderBy("tw.order", "asc");
       return workouts;
     },
   },
