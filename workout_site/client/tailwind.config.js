@@ -31,6 +31,7 @@ module.exports = {
       '2': '1fr 1fr',
       '1': 'auto',
       '23': '2fr 1fr',
+      '13': '1fr 2fr',
       '3': '1fr 1fr 1fr',
       '4': '1fr 1fr 1fr 1fr',
     }
