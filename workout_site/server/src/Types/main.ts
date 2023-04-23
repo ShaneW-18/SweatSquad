@@ -9,6 +9,7 @@ export type User = {
   description?: String;
   following?: [User];
   image?: String;
+  activeTracks?: [Track];
 };
 export type UserDB = {
   userId: uuidv4;
@@ -102,3 +103,8 @@ export type follow = {
   followedUserId: uuidv4;
   createdAt: Date;
 };
+export type activeTrackDB = {
+  userTrackId: uuidv4;
+  trackId: uuidv4;
+  userId: uuidv4;
+}
