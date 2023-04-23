@@ -10,6 +10,7 @@ import {
 import { BiLayerPlus } from 'react-icons/bi';
 import { FiLogOut } from "react-icons/fi";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 import { useRouter } from 'next/router';
 

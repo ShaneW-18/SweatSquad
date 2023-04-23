@@ -5,8 +5,7 @@ import Content from "../../components/Content";
 import { useRouter } from "next/router";
 
 export default function Dashboard() {
-  const router = useRouter();
-  const { data: session } = useSession();
+
   let username: any = "user";
 
   return (
@@ -19,6 +18,7 @@ export default function Dashboard() {
 }
 export async function getServerSideProps(context: any) {
   const session = await getSession(context);
+  console.log(session);
   if (!session) {
     return {
       redirect: {

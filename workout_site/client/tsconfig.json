@@ -22,8 +22,8 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "pages/_app.tsx", "GraphQL/Mutations.js", "GraphQL/Queries.js", "pages/workout/[workoutId].jsx", "pages/track/[trackId].jsx"  ],
+    "**/*.tsx", 
+    "pages/_app.tsx", "GraphQL/Mutations.js", "GraphQL/Queries.js", "pages/workout/[workoutId].jsx", "pages/track/[trackId].jsx"  ],
   "exclude": [
     "node_modules"
   ]
