@@ -23,7 +23,14 @@ export default function User({userData, userErrorCode, initFollowers, initFollow
     const [createConversation] = useMutation(CREATE_CONVERSATION);
     const [followingState, setFollowingState] = useState(false);
 
-    const schedules = userData.schedules;
+    let trackIdBuffer = [];
+    const activeTracks = userData.activeTracks.filter(e => {
+        if(trackIdBuffer.indexOf(e.trackId)===-1){
+            trackIdBuffer.push(e.trackId);
+            return true;
+        }
+        return false;
+    });
     const tracks = userData.tracks;
     const workouts = userData.workouts;
     const { data:session, status } = useSession();
@@ -120,16 +127,16 @@ export default function User({userData, userErrorCode, initFollowers, initFollow
                         <div className='gap-2 grid grid-cols-1 md:grid-cols-3 px-8 py-4'>
                             <div className='border border-dg-400 rounded-md px-4 py-2'>
                                 <div className='flex items-center gap-2'>
-                                    <span>Schedules</span>
+                                    <span>Active Tracks</span>
                                     <AiOutlineCalendar className='ml-auto' />
                                 </div>
-                                {schedules === undefined || (typeof schedules ==='object' && schedules.length===0) ? (
-                                    <span className='text-white/60 font-medium'>No schedules!</span>
+                                {activeTracks === undefined || (typeof activeTracks ==='object' && activeTracks.length===0) ? (
+                                    <span className='text-white/60 font-medium'>This user is not currently participating in any tracks!</span>
                                 ) : (
                                     <div className='flex flex-col gap-2 mt-2'>
-                                        {schedules.map(e => {
+                                        {activeTracks.map(e => {
                                             return (
-                                                <LinkBox title={e.name} desc={e.description} href={`/schedule/${e.scheduleId}`} key={`s-${e.scheduleId}`} />
+                                                <LinkBox title={e.name} desc={e.description} href={`/track/${e.trackId}`} key={`s-${e.trackId}`} />
                                             )
                                         })}
                                     </div>
@@ -213,11 +220,7 @@ export async function getServerSideProps(context: any) {
 
         const { userId } = userData.data.user;
 
-        const schedules = await client.query({
-            query: GET_USER_SCHEDULES,
-            variables:{userId:userId}
-        });
-        userData.schedules = schedules.data.get_all_schedules_by_userId.schedules;
+        userData.activeTracks = data.get_user_username.user.activeTracks;
 
         const tracks = await client.query({
             query: GET_USER_TRACKS,

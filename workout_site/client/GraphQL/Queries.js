@@ -6,6 +6,10 @@ export const GET_USER_BY_ID = gql`
       email
       userId
       username
+      activeTracks {
+        userTrackId
+        trackId
+      }
     }
   }
 `;
@@ -18,6 +22,11 @@ query ExampleQuery($username: String!) {
     success
     user {
       userId
+      activeTracks {
+        name
+        trackId
+        description
+      }
     }
   }
 }
@@ -48,6 +57,20 @@ query Query($userId: String!) {
       name
       description
       workoutId
+    }
+  }
+}
+`;
+
+export const SEARCH_USERS = gql`
+query Query($username: String!) {
+  search_all_users(username: $username) {
+    code
+    message
+    success
+    users {
+      userId
+      username
     }
   }
 }

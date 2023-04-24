@@ -168,3 +168,23 @@ mutation Mutation($conversationId: String!, $message: String!, $userId: String!)
   }
 }
 `;
+
+export const ADD_ACTIVE_TRACK = gql`
+mutation Mutation($userId: String!, $trackId: String!) {
+  add_active_track(userId: $userId, trackId: $trackId) {
+    success
+    message
+    code
+  }
+}
+`;
+
+export const REMOVE_ACTIVE_TRACK = gql`
+mutation Mutation($userId: String!, $trackId: String!) {
+  remove_active_track(userId: $userId, trackId: $trackId) {
+    code
+    message
+    success
+  }
+}
+`;

@@ -1,34 +1,45 @@
 import React, { useState,useEffect } from 'react';
 import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
-import { FOLLOW_USER, UNFOLLOW_USER } from '../GraphQL/Mutations';
+import { ADD_ACTIVE_TRACK, REMOVE_ACTIVE_TRACK } from '../GraphQL/Mutations';
 import { useMutation, gql } from '@apollo/client';
+import { AiOutlinePlusCircle, AiOutlineMinusCircle } from 'react-icons/ai';
 
-export default function TrackBtn({userId, targetUserId, isFollowing=false, showText=true,
+export default function TrackBtn({trackData, isActive=false, showText=true,
     callback=null}: any){
-    const [followUser] = useMutation(FOLLOW_USER);
-    const [unfollowUser] = useMutation(UNFOLLOW_USER);
+    const [addTrack] = useMutation(ADD_ACTIVE_TRACK);
+    const [removeTrack] = useMutation(REMOVE_ACTIVE_TRACK);
 
-    const [following, setFollowing] = useState(isFollowing);
+    const [active, setActive] = useState(isActive);
 
     const handleClick = async () => {
+
+        setActive(!active);
+        return;
+
         let statusCode = 0;
         let res = undefined;
-        const vars = {
-            variables: {
-                followingId: userId,
-                followedId: targetUserId
-            }
-        }
 
-        let key = 'follow_user';
-        if(!following){
-            res=await followUser(vars)
+        let key = 'add_active_track';
+        if(!active){
+            res=await addTrack({
+                variables: {
+                    userId: trackData.userId,
+                    trackId:trackData.trackId
+                }
+            })
                 .then(({data})=>{return data});
         } else {
-            res=await unfollowUser(vars)
+            res=await removeTrack({
+                variables: {
+                    userTrackId:trackData.userTrackId
+                }
+            })
                 .then(({data})=>{return data});
-                key='unfollow_user';
+                key='remove_active_track';
         }
+
+        console.log(key);
+        console.log(res);
 
         if (!(key in res)){
             return;
@@ -39,27 +50,35 @@ export default function TrackBtn({userId, targetUserId, isFollowing=false, showT
             return;
         }
 
-        setFollowing(!following);
+        let data={
+            userId:trackData.userId,
+            trackId:trackData.trackId
+        }
+        if (active){
+            //data['userTrackId'] =  res.add_active_track.userTrackId
+        }
+
+        setActive(!active);
 
         if(callback===null){
             return;
         }
-        callback(!following);
+        callback(!active);
     }
 
-    if (!following){
+    if (!active){
         return (
             <button className='border-2 border-primary text-primary font-semibold px-2 py-1 flex items-center gap-2 rounded-md' onClick={handleClick}>
-                <AiOutlineUserAdd />
-                {showText && 'Follow'}      
+                <AiOutlinePlusCircle />
+                {showText && 'Join Track'}      
             </button>
         );
     }
 
     return (
         <button className='border-2 border-primary --bg bg-primary hover:border-primary-h hover:bg-primary-h text-white font-semibold px-2 py-1 flex items-center gap-2 rounded-md' onClick={handleClick}>
-            <AiOutlineUserDelete />
-            {showText && 'Unfollow'}
+            <AiOutlineMinusCircle />
+            {showText && 'Leave Track'}
         </button>
     );
 }

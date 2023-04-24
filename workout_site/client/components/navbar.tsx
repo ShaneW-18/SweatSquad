@@ -51,11 +51,12 @@ const Navbar = () => {
             <FaUserAlt /> <span className="hidden md:inline-block">Profile</span>
           </div>
         </Link>
+        {/*}
         <Link href="/settings">
           <div className={`px-4 py-3 md:py-2 hover:bg-primary-h flex items-center --bg font-medium gap-4 rounded-md ${page === 'settings' && 'bg-primary-h'}`}>
             <FaCog /> <span className="hidden md:inline-block">Settings</span>
           </div>
-        </Link>
+        </Link>*/}
       </div>
       <div className="px-4 py-4 absolute bottom-0 w-full">
         <span className="cursor-pointer">
