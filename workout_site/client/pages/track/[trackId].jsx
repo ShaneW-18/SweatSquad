@@ -27,7 +27,7 @@ import TrackBtn from '../../components/TrackBtn';
 export default function Track({trackData, myWorkouts, activeTracks}) {
     const [addWorkoutToTrack, {data}] = useMutation(ADD_WORKOUT_TO_TRACK);
     const [deleteWorkouts, {ddata}] = useMutation(DELETE_WORKOUTS);
-    const [workouts, setWorkouts] = useState(trackData.workouts);
+    const [workouts, setWorkouts] = useState(trackData.workouts??[]);
     const [activeState, setActiveState] = useState(false);
     const router = useRouter();
     const { trackId } = router.query;
@@ -59,6 +59,7 @@ export default function Track({trackData, myWorkouts, activeTracks}) {
             description: 'Day for resting',
             order:workouts.length+1
         }]);
+        console.log(workouts);
     }
 
     useEffect(() => {
