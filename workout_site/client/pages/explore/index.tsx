@@ -19,7 +19,7 @@ export default function Explore({users}){
                         <div className='grid grid-cols-1 md:grid-cols-4 gap-2'>
                             {users.map(e=>{
                                 return(
-                                    <Link href={`/user/${e.username}`} className='--bg hover:bg-dg-200'>
+                                    <Link href={`/user/${e.username}`} className='--bg hover:bg-dg-200' key={e.username}>
                                         <div className='px-4 py-2 flex items-center gap-2 border border-dg-300 rounded-md'>
                                             <Image src="https://api.tecesports.com/images/general/user.png" width="30"
                                                 height="30" alt="" className='rounded-full' />

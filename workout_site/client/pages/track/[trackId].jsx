@@ -9,7 +9,7 @@ import { IoAddCircle } from 'react-icons/io5';
 import Btn from '../../components/Btn';
 import Link from 'next/link';
 import { AiOutlineLeft } from 'react-icons/ai';
-import { GET_USER_WORKOUTS, GET_TRACK_BY_ID} from '../../GraphQL/Queries';
+import { GET_USER_WORKOUTS, GET_TRACK_BY_ID, GET_USER_BY_ID} from '../../GraphQL/Queries';
 import { ADD_WORKOUT_TO_TRACK, DELETE_WORKOUTS } from '../../GraphQL/Mutations';
 import { useLazyQuery, useMutation, gql } from '@apollo/client';
 import "react-toastify/dist/ReactToastify.css";
@@ -126,7 +126,10 @@ export default function Track({trackData, myWorkouts, activeTracks}) {
             .then(({ data }) => {
                 return data;
             });
+            console.log(res);
         });
+
+        console.log(workouts);
 
         successToast(`${trackData.name} has been updated!`);
     }
@@ -189,7 +192,7 @@ export default function Track({trackData, myWorkouts, activeTracks}) {
                                                 {myWorkouts.map((e,index) => {
                                                     return (
                                                         <div onClick={()=>{pushWorkout(index)}}
-                                                            key={`wk-${e.workoutId}`} className='flex gap-3 w-full items-center px-2 py-1 --bg hover:cursor-pointer bg-dg-200 rounded-md hover:bg-dg-300'>
+                                                            key={`wk-${e.workoutId}-${index}`} className='flex gap-3 w-full items-center px-2 py-1 --bg hover:cursor-pointer bg-dg-200 rounded-md hover:bg-dg-300'>
                                                             <span>
                                                                 <BsPlusCircleFill />
                                                             </span>
@@ -306,7 +309,7 @@ export async function getServerSideProps(context){
             }
         }
     }
-    const { userId } = session.user;
+    const userId = session.user['userId'];
     let activeTracks=[];
 
     try {
@@ -315,9 +318,13 @@ export async function getServerSideProps(context){
             variables: {userId:userId}
         });
 
-        console.log(action);
+        console.log(active);
         activeTracks = active.data.User.user.activeTracks;
+    } catch(e){
 
+    }
+
+    try {
         const myWorkouts = await client.query({
             query: GET_USER_WORKOUTS,
             variables:{userId:userId}
@@ -330,11 +337,16 @@ export async function getServerSideProps(context){
         });
 
         trackData = track.data.get_track_by_id.track;
+        console.log(track);
+        console.log('--------------------------------');
+        console.log(trackData);
     }
     catch(e){
         console.error(e);
     }
     
+
+    console.log(workouts)
 client.stop();
 
     return {

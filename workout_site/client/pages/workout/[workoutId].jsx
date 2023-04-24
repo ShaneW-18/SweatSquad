@@ -135,8 +135,8 @@ export default function Workout({workoutData}) {
                 return data;
             });
 
-            successToast(`Workout has been updated!`);
         });
+        successToast(`Workout has been updated!`);
     }
 
     const clearWorkout = () => {
