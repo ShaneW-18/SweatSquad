@@ -168,3 +168,25 @@ query Query($userId: String!) {
   }
 }
 `;
+
+export const GET_CONVERSATIONS=gql`
+query Query($userId: String!) {
+  User(id: $userId) {
+    user {
+      conversations {
+        conversationId
+        name
+        messages {
+          messageId
+          message
+          sender {
+            userId
+            username
+          }
+          timeSent
+        }
+      }
+    }
+  }
+}
+`;

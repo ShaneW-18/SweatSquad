@@ -136,3 +136,35 @@ mutation Mutation($followingId: String!, $followedId: String!) {
   }
 }
 `;
+
+export const CREATE_CONVERSATION=gql`
+mutation Mutation($userId: [String!]!, $name: String!) {
+  create_conversation(userId: $userId, name: $name) {
+    success
+    conversation {
+      conversationId
+      name
+    }
+    message
+    code
+  }
+}
+`;
+
+export const SEND_MESSAGE=gql`
+mutation Mutation($conversationId: String!, $message: String!, $userId: String!) {
+  create_message(conversationId: $conversationId, message: $message, userId: $userId) {
+    code
+    success
+    message {
+      messageId
+      timeSent
+      sender {
+        userId
+        username
+      }
+      message
+    }
+  }
+}
+`;

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --chat-bar-h:40px;
+}
+
 * {
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
@@ -174,6 +178,14 @@ button {
   to   { opacity: 1; }
 }
 
+
+.wrap {
+  overflow-wrap: break-word;
+}
+
+.chat-bar {
+  height:var(--chat-bar-h);
+}
 
 .loading-main {
   -webkit-animation: fade-in .4s; /* Safari, Chrome and Opera > 12.1 */

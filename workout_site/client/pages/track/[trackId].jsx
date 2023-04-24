@@ -21,6 +21,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import Auth from '../../components/Auth';
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { BsPlusCircleFill } from 'react-icons/bs/';
+import client from '../../db';
 
 export default function Track({trackData, myWorkouts}) {
     const [addWorkoutToTrack, {data}] = useMutation(ADD_WORKOUT_TO_TRACK);
@@ -248,13 +249,6 @@ function WorkoutListItem({index, name, desc, removeFunc, moveFunc}) {
 }
 
 export async function getServerSideProps(context){
-    const client = new ApolloClient({
-        link: createHttpLink({
-            uri: "https://workout-dev.swiles.tech",
-        }),
-        cache: new InMemoryCache(),
-    });
-
     const { trackId } = context.query;
     let workouts = [];
     let trackData={};
@@ -278,6 +272,8 @@ export async function getServerSideProps(context){
     catch(e){
         console.error(e);
     }
+    
+client.stop();
 
     return {
         props: {

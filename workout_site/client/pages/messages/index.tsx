@@ -1,67 +1,59 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import Content from '../../components/Content';
-import { BiChevronRight } from 'react-icons/bi';
+import { GET_CONVERSATIONS } from '../../GraphQL/Queries.js'
+import { getSession } from 'next-auth/react';
+import Link from 'next/link';
+import { BiLinkExternal } from 'react-icons/bi';
+import { ImSad } from 'react-icons/im';
+import ConvoSideBar from '../../components/ConvoSideBar';
+import client from '../../db';
 
-export default function Messages(){
-
-    const [selectedConversation, setSelectedConversation] = useState(-1);
-
-    const conversations=[
-        {
-            name:'gungas',
-            preview:'hello ..'
-        },
-        {
-            name:'guns',
-            preview:'helo ..'
-        },
-        {
-            name:'ngas',
-            preview:'hllo ..'
-        },
-    ];
-
-    const updateSelectedConversation = (conversationId) => {
-        setSelectedConversation(conversationId);
-    }
-
-    useEffect(() => {
-        async function updateMessages() {
-            //const res = await getMessages()
-        }
-
-        updateMessages();
-    }, [selectedConversation])
+export default function Messages({conversations}){
+    const hasConvos = conversations.length>0;
 
     return (
         <Content>
-            <div className='h-f grid grid-cols-13'>
-                <div className=''>
-                    <div className='px-4 py-2'>
-                        <h1 className='text-xl font-semibold'>Conversations</h1>
+            {hasConvos ? (
+                <div className='h-f grid grid-cols-13'>
+                    <ConvoSideBar conversations={conversations} />
+                    <div className='border-l border-dg-200 h-f'>
+                        <span className='justify-center flex items-center text-xl text-white/70 font-semibold h-f'>Select a conversation</span>
                     </div>
-                    {conversations.map((e,index) => {
-                        return(
-                            <div className='relative --bg hover:bg-dg-200 px-2 cursor-pointer'
-                                onClick={updateSelectedConversation}>
-                                {index>0 && <div className='h-[1px] mx-auto bg-dg-200'></div>}
-                                <div className='flex p-2 items-center'>
-                                    <span className='flex flex-col'>
-                                        <span className='font-semibold'>{e.name}</span>
-                                        <span className='text-white/70'>{e.preview}</span>
-                                    </span>
-                                    <span className='ml-auto'>
-                                        <BiChevronRight />
-                                    </span>
-                                </div>
-
-                            </div>
-                        );
-                    })}
                 </div>
-                <div className='border-l border-dg-200 h-f'>
+            ) : (
+                <div className='h-f justify-center flex items-center text-xl text-white/70 font-semibold flex-col gap-4'>
+                    <div className='text-[60px]'>
+                        <ImSad />
+                    </div>
+                    <p>No conversations found</p>
+                    <Link href='/explore' className='font-normal text-lg flex items-center gap-2 underline'>
+                        Click here to find users
+                        <BiLinkExternal />
+                    </Link>
                 </div>
-            </div>
+            )}
         </Content>
     );
+}
+
+export async function getServerSideProps(context){
+    const session = await getSession(context);
+    const userId = session.user['userId'];
+    let conversations=[];
+    
+    try {
+        const res = await client.query({
+            query:GET_CONVERSATIONS,
+            variables:{userId:userId}
+        });
+        conversations=res.data.User.user.conversations ?? [];
+    } catch(e){
+        console.log('ERROR [/messages]', e);
+    }
+
+    return {
+        props: {
+            conversations:conversations
+        }
+    }
 }
