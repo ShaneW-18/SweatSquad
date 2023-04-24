@@ -265,9 +265,10 @@ export const resolvers = {
       return following;
     },
     activeTracks: async (parent) => {
+      console.log(parent);
       const activeTracks: types.Track[] = await knexInstance("user_tracks as ut")
         .join("tracks as t", "t.trackId", "ut.trackId")
-        .select("t.* as activeTracks")
+        .select('t.*', 'ut.userTrackId')
         .where("ut.userId", parent.userId);
       return activeTracks;
     },

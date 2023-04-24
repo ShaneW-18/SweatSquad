@@ -91,6 +91,7 @@ export const typeDefs = `#graphql
     description: String
     user: User!
     workouts: [workout]
+    userTrackId: String!
   }
 
   type genericResponce{
