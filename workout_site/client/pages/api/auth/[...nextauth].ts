@@ -4,13 +4,7 @@ import { LOGIN } from "../../../GraphQL/Mutations.js";
 import { useApolloClient, gql } from "@apollo/client";
 import { User } from "next-auth";
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
-
-const client = new ApolloClient({
-  link: createHttpLink({
-    uri: "https://workout-dev.swiles.tech",
-  }),
-  cache: new InMemoryCache(),
-});
+import client from "../../../db.js";
 
 export const authOptions: any = {
   // Configure one or more authentication providers

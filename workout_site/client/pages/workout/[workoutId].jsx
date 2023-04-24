@@ -6,7 +6,6 @@ import { BiSave } from 'react-icons/bi';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { IoMdRemoveCircle } from 'react-icons/io';
 import { IoAddCircle } from 'react-icons/io5';
-import Btn from '../../components/Btn';
 import Link from 'next/link';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { SEARCH_EXERCISES, GET_WORKOUT_BY_ID } from '../../GraphQL/Queries';
@@ -18,7 +17,7 @@ import { ToastContainer } from "react-toastify";
 import { useDrag, useDrop } from 'react-dnd';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
+import client from '../../db';
 
 const MIN_QUERY_LEN = 2;
 
@@ -109,9 +108,6 @@ export default function Workout({workoutData}) {
         }
 
         const { workoutId } = router.query;
-
-        console.log(wform);
-
         await deleteExercises({
             variables: {
                 workoutId: workoutId
@@ -203,8 +199,6 @@ export default function Workout({workoutData}) {
 
         const idx=parseInt(name[1],10);
         const temp = [...exercises];
-        console.log(idx);
-        console.log(temp);
         temp[idx][name[0]]=value;
         setExercises(temp);
     }
@@ -371,12 +365,6 @@ function ExerciseListItem({index, name, desc, removeFunc, moveFunc, updateFunc, 
 }
 
 export async function getServerSideProps(context){
-    const client = new ApolloClient({
-        link: createHttpLink({
-            uri: "https://workout-dev.swiles.tech",
-        }),
-        cache: new InMemoryCache(),
-    });
 
     const { workoutId } = context.query;
     let workoutData={};
@@ -387,7 +375,6 @@ export async function getServerSideProps(context){
             variables:{workoutId:workoutId}
         });
         workoutData=workout.data.get_workout_by_id.workout;
-        console.log(workoutData.exercises);
     }
     catch(e){
         console.error(e);

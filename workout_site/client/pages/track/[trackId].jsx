@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Content from '../../components/Content';
 import { useSession, getSession } from 'next-auth/react';
@@ -21,13 +21,36 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import Auth from '../../components/Auth';
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { BsPlusCircleFill } from 'react-icons/bs/';
+import client from '../../db';
+import TrackBtn from '../../components/TrackBtn';
 
-export default function Track({trackData, myWorkouts}) {
+export default function Track({trackData, myWorkouts, activeTracks}) {
     const [addWorkoutToTrack, {data}] = useMutation(ADD_WORKOUT_TO_TRACK);
     const [deleteWorkouts, {ddata}] = useMutation(DELETE_WORKOUTS);
-    const [workouts, setWorkouts] = useState(trackData.workouts);
+    const [workouts, setWorkouts] = useState(trackData.workouts??[]);
+    const [activeState, setActiveState] = useState(false);
     const router = useRouter();
     const { trackId } = router.query;
+    const { data: session, status } = getSession();
+    const [userId, setUserId] = useState('0');
+    const [td, setTd] = useState({
+        userId:userId,
+        trackId: trackId
+    });
+    
+
+    useEffect(() => {
+        if(status!=='authenticated'){
+            return;
+        }
+
+        if (!('user' in session)){
+            return;
+        }
+
+        setUserId(session.user['userId']);
+        setActiveState(activeTracks.map(e=>e.trackId).indexOf(trackId)!==-1);
+    },[session,status]);
 
     const addRestDay = async() => {
         setWorkouts([...workouts, {
@@ -36,7 +59,21 @@ export default function Track({trackData, myWorkouts}) {
             description: 'Day for resting',
             order:workouts.length+1
         }]);
+        console.log(workouts);
     }
+
+    useEffect(() => {
+        if(status!=='authenticated'){
+            return;
+        }
+
+        if (!('user' in session)){
+            return;
+        }
+
+        setUserId(session.user['userId']);
+        setFollowingState(followers.map(e=>e.userId).indexOf(session.user['userId']) !== -1);
+    },[session,status]);
 
     const pushWorkout = (index) => {
         setWorkouts([...workouts, myWorkouts[index]]);
@@ -59,6 +96,12 @@ export default function Track({trackData, myWorkouts}) {
             ex.splice(dragIndex, 1, prevItem[0]);
             return ex;
         }));
+    }
+
+    const onActiveCallback = (active, data) => {
+        if(active){
+
+        }
     }
 
     const updateTrack = async() => {
@@ -101,10 +144,14 @@ export default function Track({trackData, myWorkouts}) {
                     </div>
                     <div className='bg-dg-100 flex justify-center items-center px-8'>
                         <div className='w-full min-w-[400px]'>
-                            <div className=''>
+                            <div className='flex items-center justify-content w-full'>
                                 <div className='mb-4'>
                                     <h1 className='text-xl font-medium'>{trackData.name}</h1>
                                     <p className='text-white/70'>{trackData.description}</p>
+                                </div>
+                                <div className='ml-auto'>
+                                    <TrackBtn trackData={td} isActive={activeState} 
+                                        callback={onActiveCallback}/>
                                 </div>
                             </div>
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -248,20 +295,29 @@ function WorkoutListItem({index, name, desc, removeFunc, moveFunc}) {
 }
 
 export async function getServerSideProps(context){
-    const client = new ApolloClient({
-        link: createHttpLink({
-            uri: "https://workout-dev.swiles.tech",
-        }),
-        cache: new InMemoryCache(),
-    });
-
     const { trackId } = context.query;
     let workouts = [];
     let trackData={};
     const session = await getSession(context);
+    if(session===null){
+        return {
+            redirect:{
+                destination:'/login'
+            }
+        }
+    }
     const { userId } = session.user;
+    let activeTracks=[];
 
     try {
+        const active = await client.query({
+            query:GET_USER_BY_ID,
+            variables: {userId:userId}
+        });
+
+        console.log(action);
+        activeTracks = active.data.User.user.activeTracks;
+
         const myWorkouts = await client.query({
             query: GET_USER_WORKOUTS,
             variables:{userId:userId}
@@ -278,11 +334,14 @@ export async function getServerSideProps(context){
     catch(e){
         console.error(e);
     }
+    
+client.stop();
 
     return {
         props: {
             trackData: trackData,
-            myWorkouts: workouts
+            myWorkouts: workouts,
+            activeTracks: activeTracks
         }
     }
 }

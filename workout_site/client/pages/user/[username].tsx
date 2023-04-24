@@ -1,8 +1,8 @@
 import React, { useState,useEffect } from 'react';
 import {GET_USERDATA_BY_USERNAME, GET_USER_SCHEDULES, GET_USER_TRACKS, GET_USER_WORKOUTS, GET_USER_ID,
     GET_FOLLOWERS, GET_FOLLOWING } from '../../GraphQL/Queries.js'
-import { ApolloClient, createHttpLink, InMemoryCache, useLazyQuery } from "@apollo/client";
-import {useRouter } from 'next/router.js';
+import { ApolloClient, createHttpLink, InMemoryCache, useLazyQuery, useMutation} from "@apollo/client";
+import Router, {useRouter } from 'next/router.js';
 import Content from "../../components/Content";
 import { exercises as e, workouts as w, tracks as t, schedules as s } from '../../sample/data';
 import FollowBtn from '../../components/FollowBtn';
@@ -10,6 +10,9 @@ import { GiWeightLiftingUp } from 'react-icons/gi';
 import { AiOutlineOrderedList, AiOutlineCalendar } from 'react-icons/ai';
 import LinkBox from '../../components/LinkBox';
 import { useSession } from 'next-auth/react';
+import { FiMail } from 'react-icons/fi';
+import { CREATE_CONVERSATION } from '../../GraphQL/Mutations.js';
+import client from '../../db.js';
 
 export default function User({userData, userErrorCode, initFollowers, initFollowing}: any){
     const router = useRouter();
@@ -17,9 +20,17 @@ export default function User({userData, userErrorCode, initFollowers, initFollow
     const profileImage = userData.image ?? 'https://api.tecesports.com/images/general/user.png';
     const description = userData.description ?? 'GymSocial user';
     const [getUserId] = useLazyQuery(GET_USER_ID);
+    const [createConversation] = useMutation(CREATE_CONVERSATION);
     const [followingState, setFollowingState] = useState(false);
 
-    const schedules = userData.schedules;
+    let trackIdBuffer = [];
+    const activeTracks = userData.activeTracks.filter(e => {
+        if(trackIdBuffer.indexOf(e.trackId)===-1){
+            trackIdBuffer.push(e.trackId);
+            return true;
+        }
+        return false;
+    });
     const tracks = userData.tracks;
     const workouts = userData.workouts;
     const { data:session, status } = useSession();
@@ -56,6 +67,24 @@ export default function User({userData, userErrorCode, initFollowers, initFollow
         });
     }
 
+    const createConvo = async() =>{
+        const res = await createConversation({
+            variables: {
+                userId:[userId, userData.userId],
+                name:'Untitled Conversation'
+            }
+        }).then(({data})=>{
+            return data;
+        })
+
+        if (!('create_conversation' in res)){
+            return;
+        }
+
+        const { conversationId } = res.create_conversation.conversation;
+        Router.push(`/messages/${conversationId}`);
+    }
+
     return (
         <Content>
             <div className='h-[100vh] bg-dg-100 flex items-center justify-center'>
@@ -78,25 +107,36 @@ export default function User({userData, userErrorCode, initFollowers, initFollow
                                         <span className='text-sm text-white/70'>Following</span>
                                     </div>
                                 </div>
-                                <div className=''>
-                                    {userId !== targetUserId && <FollowBtn userId={userId} targetUserId={userData.userId} isFollowing={followingState}
-                                        callback={onFollowCallback} />}
-                                </div>
+                                {userId !== userData.userId && (
+                                    <>
+                                        <div className=''>
+                                            <FollowBtn userId={userId} targetUserId={userData.userId} isFollowing={followingState}
+                                                callback={onFollowCallback} />
+                                        </div>
+                                        <div className=''>
+                                            <button className='border-2 border-blue text-blue font-semibold px-2 py-1 flex items-center gap-2 rounded-md'
+                                                onClick={createConvo}>
+                                                <FiMail />
+                                                Message
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                         <div className='gap-2 grid grid-cols-1 md:grid-cols-3 px-8 py-4'>
                             <div className='border border-dg-400 rounded-md px-4 py-2'>
                                 <div className='flex items-center gap-2'>
-                                    <span>Schedules</span>
+                                    <span>Active Tracks</span>
                                     <AiOutlineCalendar className='ml-auto' />
                                 </div>
-                                {schedules === undefined || (typeof schedules ==='object' && schedules.length===0) ? (
-                                    <span className='text-white/60 font-medium'>No schedules!</span>
+                                {activeTracks === undefined || (typeof activeTracks ==='object' && activeTracks.length===0) ? (
+                                    <span className='text-white/60 font-medium'>This user is not currently participating in any tracks!</span>
                                 ) : (
                                     <div className='flex flex-col gap-2 mt-2'>
-                                        {schedules.map(e => {
+                                        {activeTracks.map(e => {
                                             return (
-                                                <LinkBox title={e.name} desc={e.description} href={`/schedule/${e.scheduleId}`} key={`s-${e.scheduleId}`} />
+                                                <LinkBox title={e.name} desc={e.description} href={`/track/${e.trackId}`} key={`s-${e.trackId}`} />
                                             )
                                         })}
                                     </div>
@@ -161,13 +201,6 @@ export async function getServerSideProps(context: any) {
     let followers: any = {};
     let following: any = {};
 
-    const client = new ApolloClient({
-        link: createHttpLink({
-          uri: "https://workout-dev.swiles.tech",
-        }),
-        cache: new InMemoryCache(),
-    });
-
     try {
         const { data } = await client.query({
             query: GET_USERDATA_BY_USERNAME,
@@ -187,11 +220,7 @@ export async function getServerSideProps(context: any) {
 
         const { userId } = userData.data.user;
 
-        const schedules = await client.query({
-            query: GET_USER_SCHEDULES,
-            variables:{userId:userId}
-        });
-        userData.schedules = schedules.data.get_all_schedules_by_userId.schedules;
+        userData.activeTracks = data.get_user_username.user.activeTracks;
 
         const tracks = await client.query({
             query: GET_USER_TRACKS,

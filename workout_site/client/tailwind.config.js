@@ -18,6 +18,8 @@ module.exports = {
       'transparent':'rgba(0,0,0,0)',
       'red':'#e64040',
       'red-h': '#b83939',
+      'blue': '#5caaed',
+      'msg-mine':'#4a75e0',
     },
     extend: {
     },

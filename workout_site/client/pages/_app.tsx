@@ -10,6 +10,7 @@ import {
 } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { Router } from "next/router";
+import client, { closeClient } from "../db";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -19,16 +20,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       );
     });
   }
-});
-
-const link = from([
-  errorLink,
-  new HttpLink({ uri: "https://workout-dev.swiles.tech/" }),
-]);
-
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: link,
 });
 
 function Loading() {
@@ -48,6 +39,7 @@ export default function App({ Component, pageProps, session }: any) {
 
     const end = () => {
       setLoading(false);
+      closeClient();
     };
     Router.events.on("routeChangeStart", start);
     Router.events.on("routeChangeComplete", end);
