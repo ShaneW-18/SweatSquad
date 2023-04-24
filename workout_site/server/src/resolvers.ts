@@ -371,7 +371,7 @@ export const resolvers = {
         .select("m.* as message")
         .where("m.conversationId", parent.conversationId)
         .offset(offset)
-        .limit(10);
+        .limit(50);
       return messages;
     }
 
