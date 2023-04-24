@@ -12,6 +12,7 @@ export const knexInstance = knex({
     database: process.env.PG_DATABASE,
     port: parseInt(process.env.PG_PORT),
   },
+  pool:{min: 0, max: 20}
 });
 
 export interface User {

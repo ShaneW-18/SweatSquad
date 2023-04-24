@@ -84,3 +84,9 @@ export type messageResponce = {
   messageInfo: String
   message: types.message
 }
+export type messagesResponce = {
+  code: Number;
+  success: Boolean
+  message: String
+  messages: types.message[]
+}

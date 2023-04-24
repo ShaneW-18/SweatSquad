@@ -57,6 +57,10 @@ export const resolvers = {
     },
     get_conversation_by_id:async (parent, {conversationId, offset}, context, info) => {
       return await message_Querys.get_conversation_by_id(conversationId, offset);
+    },
+    get_messages_since: async(parent,{date, conversationId}, context, info ) => {
+      return await message_Querys.get_messages_since(date, conversationId)
+     
     }
 
   },
