@@ -367,11 +367,18 @@ export const resolvers = {
       if(parent.offset){
         offset = parent.offset
       }
+      //get the last 20 messages
       const messages: types.message[] = await knexInstance("messages as m")
-        .select("m.* as message")
-        .where("m.conversationId", parent.conversationId)
-        .offset(offset)
-        .limit(50);
+      .select("m.* as message")
+      .where("m.conversationId", parent.conversationId)
+      .orderBy("m.id", "desc")
+      .limit(20)
+      .offset(offset);
+      // const messages: types.message[] = await knexInstance("messages as m")
+      //   .select("m.* as message")
+      //   .where("m.conversationId", parent.conversationId)
+      //   .offset(offset)
+      //   .limit(50);
       return messages;
     }
 
