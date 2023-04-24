@@ -170,7 +170,7 @@ export default function Messages({initconversations}) {
                                     className='rounded-full'/>
                                 <span className='text-lg font-medium'>{convo.name}</span>
                             </div>
-                            <div className="chat p-4">
+                            <div className="chat p-4 max-h-[800px] overflow-y-auto">
                                 {typeof messages !== 'undefined' && messages.map(e => {
                                     return (
                                         <Chat message={e.message} isMine={e.sender.userId===userId} key={e.messageId} />
