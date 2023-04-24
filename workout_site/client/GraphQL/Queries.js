@@ -190,3 +190,22 @@ query Query($userId: String!) {
   }
 }
 `;
+
+export const GET_MESSAGES_SINCE=gql`
+query Query($date: String!, $conversationId: String!) {
+  get_messages_since(date: $date, conversationId: $conversationId) {
+    code
+    message
+    success
+    messages {
+      messageId
+      message
+      timeSent
+      sender {
+        userId
+        username
+      }
+    }
+  }
+}
+`;

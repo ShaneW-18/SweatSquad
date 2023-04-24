@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { BiChevronRight } from 'react-icons/bi';
+import Router from 'next/router';
 
 export default function ConvoSideBar({conversations, currentId=null}){
 
@@ -13,6 +14,10 @@ export default function ConvoSideBar({conversations, currentId=null}){
         return msgs[msgs.length-1].message;
     }
 
+    const routerReplace = (convoId) => {
+        Router.replace(`/messages/${convoId}`);
+    }
+
     return (
             <div className=''>
                 <div className='px-4 py-2'>
@@ -22,7 +27,7 @@ export default function ConvoSideBar({conversations, currentId=null}){
                     const convoId = e.conversationId;
                     const bgColor = currentId === convoId ? 'bg-dg-200 block' : '';
                     return(
-                        <Link href={`/messages/${convoId}`} key={e.conversationId} className={`${bgColor}`}>
+                        <div onClick={()=>{routerReplace(e.conversationId)}} key={e.conversationId} className={`${bgColor}`}>
                             <div className='relative --bg hover:bg-dg-200 px-2 cursor-pointer'>
                                 {index>0 && <div className='h-[1px] mx-auto bg-dg-200'></div>}
                                 <div className='flex p-2 items-center'>
@@ -35,7 +40,7 @@ export default function ConvoSideBar({conversations, currentId=null}){
                                     </span>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     );
                 })}
             </div>

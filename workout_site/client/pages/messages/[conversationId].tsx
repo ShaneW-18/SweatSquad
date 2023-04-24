@@ -16,21 +16,19 @@ import { ToastContainer } from 'react-toastify';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 
-export default function Messages({conversations}) {
+export default function Messages({initconversations}) {
     const router = useRouter();
     const { conversationId } = router.query;
     const [sendMessage] = useMutation(SEND_MESSAGE);
 
+    const [conversations,setConversations]=useState([]);
     const hasConvos = conversations.length>0;
     const index = conversations.map(e=>e.conversationId).indexOf(conversationId);
     const convo = conversations[index];
-    const [messages, setMessages] = useState(convo.messages);
+    const [messages, setMessages] = useState([]);
     const { data:session, status } = useSession();
     const userId = session?.user['userId'];
-
-    useEffect(()=>{
-        setMessages(convo.messages);
-    }, [conversationId]);
+    const [c, setC] = useState(0);
 
     const [form, setForm] = useState({
         message: ''
@@ -64,36 +62,100 @@ export default function Messages({conversations}) {
             return data;
         });
 
+        console.log(res);
+
         if(!('create_message' in res)){
             return;
         }
 
+        setForm({
+            message:''
+        });
+
+        /*
         const { message } = res.create_message;
 
-        setMessages(() => {
-            return [...messages, {
-                message:message.message,
-                messageId:message.messageId,
-                sender:{
-                    userId:userId
-                }
-            }]
+        const temp = Object.assign([], messages);
+        temp.push({
+            message:message.message,
+            messageId:message.messageId,
+            sender:{
+                userId:userId
+            }
         });
+        setMessages(temp);*/
     }
 
-
-    /*
     useEffect(() => {
+
         const ev = new EventSource('/api/messages');
-        ev.onmessage = (event) =>{
-            console.log(event);
+        function callEvent (callback) {
+            ev.onmessage = (event) =>{
+                const data = JSON.parse(event.data);
+                let msg = [];
+                data.forEach(e => {
+                    setC( c + 1 );
+                    const messageId = e.messageId;
+                    const message = e.message;
+                    const sender = e.sender.userId;
+        
+                    if(messages.map(e=>e.messageId).indexOf(messageId) > -1){
+                        return;
+                    }
+
+                    callback({
+                        message:message,
+                        messageId:messageId,
+                        sender:{
+                            userId:sender
+                        }
+                    });
+
+                });
+
+                if(!msg.length){
+                    return;
+                }
+            }
         }
-        console.log(ev);
+
+        callEvent((msg)=>{
+            setMessages((prevState) => {
+                return [...prevState, msg];
+            });
+        });
 
         return () => {
             ev.close();
         }
-    } ,[]);*/
+    }, []);
+
+    useEffect(() => {
+        if(status !== 'authenticated'){
+            return;
+        }
+        async function getConvos () {
+            let conv=[];
+
+            try {
+                const res = await client.query({
+                    query:GET_CONVERSATIONS,
+                    variables:{userId:userId}
+                });
+                let t = res.data.User.user.conversations;
+                setConversations(t ?? []); 
+
+                const index = t.map(e=>e.conversationId).indexOf(conversationId);
+                const convo = t[index];
+                setMessages(convo.messages);
+            } catch(e){
+                console.log('ERROR [/messages/conversationId]', e);
+            }
+
+        }
+
+        getConvos();
+    }, [status,conversationId]);
 
     return (
         <>
@@ -109,7 +171,7 @@ export default function Messages({conversations}) {
                                 <span className='text-lg font-medium'>{convo.name}</span>
                             </div>
                             <div className="chat p-4">
-                                {messages.map(e => {
+                                {typeof messages !== 'undefined' && messages.map(e => {
                                     return (
                                         <Chat message={e.message} isMine={e.sender.userId===userId} key={e.messageId} />
                                     );
@@ -159,43 +221,20 @@ function Chat({message, isMine}){
 export async function getServerSideProps(context){
     const session = await getSession(context);
     const { conversationId } = context.query;
-
-    if(session===null){
-        return {
-            redirect: {
-                destination:'/login'
-            }
-        }
-    }
-
-    const userId = session.user['userId'];
-    let conversations=[];
-
-    try {
-        const res = await client.query({
-            query:GET_CONVERSATIONS,
-            variables:{userId:userId}
-        });
-        conversations=res.data.User.user.conversations ?? []; 
-    } catch(e){
-        console.log('ERROR [/messages/conversationId]', e);
-    }
-
-    const index = conversations.map(e=>e.conversationId).indexOf(conversationId);
-    const convo = conversations[index];
     let date = new Date().getTime();
+    /*
     if(convo.messages.length){
-        date = new Date(convo.messages[convo.messages.length-1]?.timeSent).getTime();
-    }
-    
+        date = convo.messages[convo.messages.length-1]?.timeSent;
+    }*/
+
     context.res.setHeader('set-cookie', [
         `lastConversation=${conversationId}; path=/; samesite=lax; httponly`,
-        `checkSince=${new Date(date).getTime()}; path=/; samesite=lax; httponly`,
+        `checkSince=${date}; path=/; samesite=lax; httponly`,
     ]);
 
     return {
         props: {
-            conversations:conversations
+            conversations:[]
         }
     }
 }
