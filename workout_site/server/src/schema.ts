@@ -162,6 +162,12 @@ export const typeDefs = `#graphql
     messageInfo: String!
     message: message
   }
+  type messagesResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    messages: [message]
+  }
   
 
 
@@ -200,7 +206,7 @@ export const typeDefs = `#graphql
     create_conversation(userId: [String!]!, name: String!): conversationResponce!
     create_message(conversationId: String!, message: String!, userId: String!): messageResponce!
     edit_conversation(conversationId: String!, name: String, userId: String): conversationResponce!
-
+    
   }
   type Query{
     "all of user schedules"
@@ -220,5 +226,6 @@ export const typeDefs = `#graphql
     get_all_users_following(userId: String!): get_all_users_follow_responce!
     get_all_users_followers(userId: String!): get_all_users_follow_responce!
     get_conversation_by_id(conversationId: String!, offset: Int): conversationResponce!
+    get_messages_since(date: String!, conversationId: String!): messagesResponce
   }
 `;
