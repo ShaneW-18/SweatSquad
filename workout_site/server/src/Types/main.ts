@@ -42,6 +42,7 @@ export type Track = {
   description?: String;
   user: User;
   workouts?: [Workout];
+  userTrackId?: uuidv4;
 };
 export type TrackDB = {
   name: String;
