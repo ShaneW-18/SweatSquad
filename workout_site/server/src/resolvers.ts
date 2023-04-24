@@ -371,7 +371,7 @@ export const resolvers = {
       const messages: types.message[] = await knexInstance("messages as m")
       .select("m.* as message")
       .where("m.conversationId", parent.conversationId)
-      .orderBy("m.id", "desc")
+      .orderBy("m.timeSent", "desc")
       .limit(20)
       .offset(offset);
       // const messages: types.message[] = await knexInstance("messages as m")
