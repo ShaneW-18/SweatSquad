@@ -75,6 +75,7 @@ export type Exercise = {
   exerciseId: String;
   reps?: Number;
   sets?: Number;
+  order?: Number;
 };
 export type trackSceduleDB = {
   trackScheduleId: uuidv4;
