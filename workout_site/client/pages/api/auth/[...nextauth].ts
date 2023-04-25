@@ -4,13 +4,7 @@ import { LOGIN } from "../../../GraphQL/Mutations.js";
 import { useApolloClient, gql } from "@apollo/client";
 import { User } from "next-auth";
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
-
-const client = new ApolloClient({
-  link: createHttpLink({
-    uri: "https://workout-dev.swiles.tech",
-  }),
-  cache: new InMemoryCache(),
-});
+import client from "../../../db.js";
 
 export const authOptions: any = {
   // Configure one or more authentication providers
@@ -88,6 +82,7 @@ export const authOptions: any = {
       // console.log(url);
       // console.log("baseUrl_______");
       // console.log(baseUrl);
+        baseUrl = "https://gymsocial.swiles.tech";
         if (url.startsWith('/')){
             return `${baseUrl}${url}`;
         } else if (new URL(url).origin === baseUrl){

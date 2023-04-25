@@ -46,7 +46,7 @@ export default function Register() {
                         if(typeof window !== 'undefined'){
                             localStorage.setItem('username', form.username);
                         }
-                        router.push('/dashboard');
+                        router.push('/explore');
                         //successToast(data.register_user.message);
                      }
                      else{
@@ -54,12 +54,6 @@ export default function Register() {
                      }     
                 }
             })
-    }
-
-    if(typeof window !== 'undefined'){
-        if (localStorage.getItem('username') !== null && localStorage.getItem('username') !== undefined){
-            router.push('/dashboard');
-        }
     }
 
     return (

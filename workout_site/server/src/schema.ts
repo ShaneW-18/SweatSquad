@@ -16,6 +16,7 @@ export const typeDefs = `#graphql
     following: [User]
     "profile image of user"
     image: String
+    activeTracks: [track]
   }
   "responce structure for login and register"
   type userTypeResponce{
@@ -78,6 +79,8 @@ export const typeDefs = `#graphql
     name: String!
     description: String
     exerciseId: String!
+    sets: Int
+    reps: Int
   }
   type track{
     name: String!
@@ -116,7 +119,46 @@ export const typeDefs = `#graphql
     message: String!
     exercises: [exercise]
   }
-
+  type get_all_users_responce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    users: [User]
+  }
+  type get_all_users_follow_responce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    users: [User]
+    count: Int!
+  }
+  type conversation{
+    conversationId: String!
+    name: String!
+    created: String!
+    modified: String!
+    messages: [message]
+    users: [User]
+  }
+  type message{
+    messageId: String!
+    message: String!
+    sender: User!
+    conversation: conversation!
+    timeSent: String!
+  }
+  type conversationResponce{
+    code: Int!
+    success: Boolean!
+    message: String!
+    conversation: conversation
+  }
+  type messageResponce{
+    code: Int!
+    success: Boolean!
+    messageInfo: String!
+    message: message
+  }
 
 
   # The "Query" type is special: it lists all of the available queries that
@@ -149,7 +191,12 @@ export const typeDefs = `#graphql
     delete_workout(workoutId: String!): genericResponce!
     follow_user(followingId: String!, followedId: String!): genericResponce!
     unfollow_user(followingId: String!, followedId: String!): genericResponce!
-    
+    add_active_track(userId: String!, trackId: String!): genericResponce!
+    remove_active_track(userTrackId: String!): genericResponce!
+    create_conversation(userId: [String!]!, name: String!): conversationResponce!
+    create_message(conversationId: String!, message: String!, userId: String!): messageResponce!
+    edit_conversation(conversationId: String!, name: String, userId: String): conversationResponce!
+
   }
   type Query{
     "all of user schedules"
@@ -165,5 +212,9 @@ export const typeDefs = `#graphql
     search_exercises(name: String!): get_all_exercises_responce!
     get_track_by_id(trackId: String!): trackResponce!
     get_workout_by_id(workoutId: String!): workoutResponce!
+    search_all_users(username: String!): get_all_users_responce!
+    get_all_users_following(userId: String!): get_all_users_follow_responce!
+    get_all_users_followers(userId: String!): get_all_users_follow_responce!
+    get_conversation_by_id(conversationId: String!, offset: Int): conversationResponce!
   }
 `;

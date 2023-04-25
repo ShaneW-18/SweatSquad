@@ -6,8 +6,10 @@ import * as schedule_Types from "./Types/main.js";
 import * as responces from "./Types/responces.js";
 import { knexInstance, User } from "./interfaces.js";
 import * as user_Querys from "./resolvers/User/querys.js";
+import * as message_Querys from "./resolvers/messages/querys.js";
 import * as user_Mutations from "./resolvers/User/mutations.js";
 import * as schedule_Querys from "./resolvers/schedule/querys.js";
+import * as message_Mutations from "./resolvers/messages/mutations.js";
 import knex from "knex";
 import * as types from "./Types/main.js";
 import * as schedule_Mutations from "./resolvers/schedule/mutations.js";
@@ -43,7 +45,20 @@ export const resolvers = {
     },
     get_workout_by_id: async (parent, { workoutId }, context, info) => {
       return await schedule_Querys.get_workout_by_id(workoutId);
+    },
+    search_all_users: async (parent, { username }, context, info) => {
+      return await user_Querys.search_all_users(username);
+    },
+    get_all_users_following:async (parent, {userId}, context, info) => {
+      return await user_Querys.get_all_users_following(userId);
+    },
+    get_all_users_followers:async (parent, {userId}, context, info) => {
+      return await user_Querys.get_all_users_followers(userId);
+    },
+    get_conversation_by_id:async (parent, {conversationId, offset}, context, info) => {
+      return await message_Querys.get_conversation_by_id(conversationId, offset);
     }
+
   },
   Mutation: {
     //register user
@@ -218,7 +233,23 @@ export const resolvers = {
     },
     unfollow_user: async (parent, { followingId, followedId }, context, info) => {
       return await user_Mutations.unfollow_user(followingId, followedId);
-    }
+    },
+    add_active_track: async (parent, {userId, trackId}, context, info) => {
+      return await user_Mutations.add_active_track(userId, trackId);
+    },
+    remove_active_track: async (parent, {userTrackId}, context, info) => {
+      return await user_Mutations.remove_active_track(userTrackId); 
+    },
+    create_conversation: async (parent, {userId, name}, context, info) => {
+      return await message_Mutations.create_conversation(userId, name);
+    },
+    create_message: async (parent, {conversationId, userId, message}, context, info) => {
+      return await message_Mutations.create_message(conversationId, userId, message);
+    },
+    edit_conversation: async (parent, {conversationId, name, userId}, context, info) => {
+      return await message_Mutations.edit_conversation(conversationId, name, userId);
+    },
+
   },
 
   User: {
@@ -229,6 +260,13 @@ export const resolvers = {
         .where("f.followingUserId", parent.userId);
       return following;
     },
+    activeTracks: async (parent) => {
+      const activeTracks: types.Track[] = await knexInstance("user_tracks as ut")
+        .join("tracks as t", "t.trackId", "ut.trackId")
+        .select("t.* as activeTracks")
+        .where("ut.userId", parent.userId);
+      return activeTracks;
+    }
   },
   schedule: {
     user: async (parent) => {
@@ -248,14 +286,12 @@ export const resolvers = {
   },
   track: {
     user: async (parent) => {
-      console.log("track user");
       const user: types.User = await knexInstance("users")
         .where("userId", parent.userId)
         .first();
       return user;
     },
     workouts: async (parent) => {
-      console.log("track workouts");
       const workouts: types.Workout[] = await knexInstance("workouts as w")
         .join("workout_tracks as tw", "tw.workoutId", "w.workoutId")
         .select("w.* as workout")
@@ -275,7 +311,53 @@ export const resolvers = {
         .join("exercise_workouts as we", "we.exerciseId", "e.exerciseId")
         .select("e.* as exercise")
         .where("we.workoutId", parent.workoutId);
+        for (let i = 0; i < exercises.length; i++) {
+          let result = await knexInstance("exercise_workouts as ew")
+            .select("ew.sets")
+            .where("ew.exerciseId", exercises[i].exerciseId)
+            .where("ew.workoutId", parent.workoutId)
+            .first()
+            const sets = Number(result.sets) ;
+            exercises[i].sets = sets; 
+          result = await knexInstance("exercise_workouts as ew")
+            .select("ew.reps")
+            .where("ew.exerciseId", exercises[i].exerciseId)
+            .where("ew.workoutId", parent.workoutId)
+            .first()
+            const reps = Number(result.reps) ;
+            exercises[i].reps = reps;
+        }
       return exercises;
     },
+  },
+  conversation: {
+    users: async (parent) => {
+      const users: types.User[] = await knexInstance("user_Conversations as cu")
+        .join("users as u", "u.userId", "cu.userId")
+        .select("u.* as user")
+        .where("cu.conversationId", parent.conversationId);
+      return users;
+    },
+    messages: async (parent) => {
+      let offset = 0
+      if(parent.offset){
+        offset = parent.offset
+      }
+      const messages: types.message[] = await knexInstance("messages as m")
+        .select("m.* as message")
+        .where("m.conversationId", parent.conversationId)
+        .offset(offset)
+        .limit(10);
+      return messages;
+    }
+
+  },
+  message: {
+    sender: async (parent) => {
+      const user: types.User = await knexInstance("users")
+        .where("userId", parent.userIdFrom)
+        .first();
+      return user;
+    }
   },
 };
